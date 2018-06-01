@@ -45,8 +45,8 @@ from keras import applications
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'bottleneck_fc_model.h5'
-train_data_dir = '/home/rahul/th_data/train'
-validation_data_dir = '/home/rahul/th_data/validation'
+train_data_dir = 'th_data/train'
+validation_data_dir = 'th_data/validation'
 nb_train_samples = 2780
 nb_validation_samples =740
 epochs = 16

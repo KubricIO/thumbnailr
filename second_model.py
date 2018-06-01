@@ -70,7 +70,7 @@ def save_bottlebeck_features():
     bottleneck_features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
     print('1.2')
-    np.save(open('bottleneck_features_train.npy', 'w'),
+    np.save(open('bottleneck_features_train.npy', 'wb'),
             bottleneck_features_train)
     print('1.3')
     generator = datagen.flow_from_directory(
@@ -83,7 +83,7 @@ def save_bottlebeck_features():
     bottleneck_features_validation = model.predict_generator(
         generator, nb_validation_samples // batch_size)
     print('2')
-    np.save(open('bottleneck_features_validation.npy', 'w'),
+    np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
 
 

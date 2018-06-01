@@ -71,7 +71,11 @@ allChannelIds=[]
 #     os.makedirs(path)
 
 
+<<<<<<< HEAD
 with open('/home/rahul/th_data/channel_list_top_500.csv') as f:
+=======
+with open('../new_top_500.csv') as f:
+>>>>>>> feea3dbc626bd7c3cde3096e0ff5046ee45d2bca
     reader = csv.reader(f,delimiter=',')
     aci = list(reader)
 
@@ -101,10 +105,13 @@ for i in range(len(allChannelIds)):
         playlist.append(segments[2])
         # print(segments[2])
     # print(playlist)
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> feea3dbc626bd7c3cde3096e0ff5046ee45d2bca
     # part 2- downloading thumbnails
 
 

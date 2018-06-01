@@ -36,6 +36,10 @@ data/
 ```
 '''
 import numpy as np
+
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
@@ -49,8 +53,8 @@ train_data_dir = 'th_data/train'
 validation_data_dir = 'th_data/validation'
 nb_train_samples = 2780
 nb_validation_samples =740
-epochs = 16
-batch_size = 10
+epochs =10 
+batch_size = 16
 
 
 def save_bottlebeck_features():
@@ -89,13 +93,13 @@ def save_bottlebeck_features():
 
 def train_top_model():
     print('training model...')
-    train_data = np.load(open('bottleneck_features_train.npy'))
+    train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
     train_labels = np.array(
-        [0] * (nb_train_samples / 2) + [1] * (nb_train_samples / 2))
+        [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
 
-    validation_data = np.load(open('bottleneck_features_validation.npy'))
+    validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
     validation_labels = np.array(
-        [0] * (nb_validation_samples / 2) + [1] * (nb_validation_samples / 2))
+        [0] * int(nb_validation_samples / 2) + [1] * int(nb_validation_samples / 2))
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
@@ -111,6 +115,25 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
+    model.save('second_model.h5')
+   # loss, acc =model.evaluate(x, y, verbose=0)
+   # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
+    # summarize history for accuracy
+    plt.plot(history.history['acc']) 
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
+    # summarize history for loss
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
     print('4')
 
 save_bottlebeck_features()

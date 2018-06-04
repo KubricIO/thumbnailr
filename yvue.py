@@ -9,9 +9,7 @@ import csv
 # from config import api_key
 import os
 
-api_key = 'AIzaSyBQflK2Y8-UCPlAzlbcfA9TUXozs9fC2iU'
-
-
+## api_key = 'load_api_key'
 
 # username = 'marquesbrownlee'
 
@@ -65,24 +63,9 @@ def download(url, file_name):
 # mkbhdId = 'UCBJycsmduvYEL83R_U4JriQ'
 # myChannelId='UCruH1rzS6lv_wUEajKdVKrg'
 allChannelIds=[]
-
-# path = "./channelids"          ##making the new directory
-# if not os.path.isdir(path):
-#     os.makedirs(path)
-
-
-<<<<<<< HEAD
-with open('/home/rahul/th_data/channel_list_top_500.csv') as f:
-=======
-with open('../new_top_500.csv') as f:
->>>>>>> feea3dbc626bd7c3cde3096e0ff5046ee45d2bca
+with open('./th_data/new_top_300.csv') as f:
     reader = csv.reader(f,delimiter=',')
     aci = list(reader)
-
-
-
-
-
 
 for j in range(len(aci)):
     allChannelIds.append(aci[j][0])    
@@ -104,18 +87,8 @@ for i in range(len(allChannelIds)):
         segments = mylinks[r].rpartition('v=')
         playlist.append(segments[2])
         # print(segments[2])
-    # print(playlist)
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> feea3dbc626bd7c3cde3096e0ff5046ee45d2bca
+   
     # part 2- downloading thumbnails
-
-
-
     name = []
 
     for r in range(len(playlist)):
@@ -131,6 +104,3 @@ for i in range(len(allChannelIds)):
         # urllib.request.urlretrieve(url, r)
         download(url,filename)
         print("r=",r)
-    # print(allChannelIds[i])
-
-

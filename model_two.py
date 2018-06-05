@@ -12,10 +12,13 @@ from keras import applications
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'bottleneck_fc_model.h5'
-train_data_dir = 'th_data/train'
-validation_data_dir = 'th_data/validation'
+train_data_dir = './th_data/train'
+validation_data_dir = './th_data/validation'
+test_data_dir = './th_data/test'
+
 nb_train_samples = 2768
 nb_validation_samples =736
+nb_test_samples=200
 epochs =10 
 batch_size = 16
 # fix random seed for reproducibility
@@ -55,6 +58,19 @@ def save_bottlebeck_features():
     np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
 
+    generator = datagen.flow_from_directory(
+        test_data_dir,
+        target_size=(img_width, img_height),
+        batch_size=batch_size,
+        class_mode=None,
+        shuffle=False)
+    print('2.1')
+    bottleneck_features_test = model.predict_generator(
+        generator, nb_validation_samples // batch_size)
+    print('2.2')
+    np.save(open('bottleneck_features_test.npy', 'wb'),
+            bottleneck_features_test)
+
 
 def train_top_model():
     print('training model...')
@@ -65,6 +81,10 @@ def train_top_model():
     validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
     validation_labels = np.array(
         [0] * int(nb_validation_samples / 2) + [1] * int(nb_validation_samples / 2))
+
+    test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
+    test_labels = np.array([0]*int(nb_test_samples))
+        # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
@@ -82,6 +102,13 @@ def train_top_model():
               validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
     model.save('second_model.h5')
+
+    scores = model.evaluate(test_data, test_labels,
+                        epochs=epochs,
+                        batch_size=batch_size,
+                        validation_data=(test_data, test_labels))
+    print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+
    # loss, acc =model.evaluate(x, y, verbose=0)
    # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
     # summarize history for accuracy
@@ -99,6 +126,10 @@ def train_top_model():
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
+
+    plt.plot(scores.scores['acc'])
+    plt.plot(scores.scores['val_acc'])
+    plt.title('test accuracy')
     plt.show()
     print('4')
 

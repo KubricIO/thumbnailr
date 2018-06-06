@@ -1,5 +1,5 @@
-import urllib.request
-from bs4 import BeautifulSoup
+import urllib3
+from BeautifulSoup import BeautifulSoup
 import requests
 import pandas as pd
 import csv
@@ -22,8 +22,16 @@ import csv
 # To download the top 500 youTube channels most subscribed
 # Remember to check the box most subscribed on the social blade site
 
-source = requests.get('https://socialblade.com/youtube/top/500/mostsubscribed').text
-soup = BeautifulSoup(source, 'lxml')
+http = urllib3.PoolManager()
+
+url = 'https://socialblade.com/youtube/top/trending/top-500-channels-1-day/most-subscribed'
+source = http.request('GET', url)
+soup = BeautifulSoup(source.data)
+
+
+
+# source = requests.get('https://socialblade.com/youtube/top/trending/top-500-channels-1-day/most-subscribed').text
+# soup = BeautifulSoup(source, 'lxml')
 row = []
 all_links = soup.find_all('div', {'style':'float: left; width: 350px; line-height: 25px;'})
 
@@ -38,7 +46,7 @@ for link in row:
 
 channel_id = []
 
-for i in range(len(row2)):
+for i in range(200,len(row2)):
 
     channel = requests.get('https://socialblade.com'+row2[i]).text
     soup_channel = BeautifulSoup(channel, 'lxml')
@@ -48,22 +56,22 @@ for i in range(len(row2)):
     all_links1 = soup_channel.find_all('div', {'style': 'float: right;'})
 # print(all_links1)
     for link in all_links1:
-        channel_a.append(link.find('a', {'class': 'core-button -margin core-small-wide ui-black'}))
+        channel_a.append(link.find('a'))
 
     string = str(channel_a)
 
-    segments = string.rpartition('channel/')
+    segments = string.rpartition('c/')
 
-    new_segments = segments[2].rpartition('" rel=')
+    # new_segments = segments[2].rpartition('" rel=')
 
-    channel_id.append(new_segments[0])
+    channel_id.append(segments[2])
     print('i=', i)
 
 print(channel_id)
 while '' in channel_id:                        # There are few empty strings in the list
     channel_id.remove('')                       # This line of code will simply delete it
 
-csvfile = 'channel_List'           # Remember to change the name of the csv file for different lists
+csvfile = 'channel_List_top_50'           # Remember to change the name of the csv file for different lists
 
 with open(csvfile, 'w') as output:
     writer = csv.writer(output, lineterminator='\n')

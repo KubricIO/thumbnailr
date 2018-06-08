@@ -1,11 +1,12 @@
 import cv2
 import os
+import requests
 import urllib2
 
 
 video_url = 'https://storage.googleapis.com/videos-kubric/video-c67d4b7f-8ba7-40b6-8269-fe09cb33c18b.mp4'
 file_name = 'trial_video.mp4' 
-rsp = urllib2.urlopen(video_url)
+rsp = requests.urlopen(video_url)
 with open(file_name,'wb') as f:
     f.write(rsp.read())
 

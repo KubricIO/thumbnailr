@@ -1,8 +1,6 @@
 import numpy as np
 
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
@@ -12,11 +10,11 @@ from keras import applications
 img_width, img_height = 150, 150
 
 top_model_weights_path = 'bottleneck_fc_model.h5'
-train_data_dir = './th_data/train'
-validation_data_dir = './th_data/validation'
-test_data_dir = './th_data/test'
+train_data_dir = './th_data4/train'
+validation_data_dir = './th_data4/validation'
+test_data_dir = './th_data4/test'
 
-nb_train_samples = 2768
+nb_train_samples = 3472
 nb_validation_samples =736
 nb_test_samples=200
 epochs =10 
@@ -112,25 +110,25 @@ def train_top_model():
    # loss, acc =model.evaluate(x, y, verbose=0)
    # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
     # summarize history for accuracy
-    plt.plot(history.history['acc']) 
-    plt.plot(history.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+#    plt.plot(history.history['acc']) 
+ #   plt.plot(history.history['val_acc'])
+#    plt.title('model accuracy')
+#    plt.ylabel('accuracy')
+#    plt.xlabel('epoch')
+#    plt.legend(['train', 'test'], loc='upper left')
+#    plt.show()
     # summarize history for loss
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
+#    plt.plot(history.history['loss'])
+#    plt.plot(history.history['val_loss'])
+#    plt.title('model loss')
+#    plt.ylabel('loss')
+#    plt.xlabel('epoch')
+#    plt.legend(['train', 'test'], loc='upper left')
 
-    plt.plot(scores.scores['acc'])
-    plt.plot(scores.scores['val_acc'])
-    plt.title('test accuracy')
-    plt.show()
+#    plt.plot(scores.scores['acc'])
+#    plt.plot(scores.scores['val_acc'])
+#    plt.title('test accuracy')
+#    plt.show()
     print('4')
 
 save_bottlebeck_features()

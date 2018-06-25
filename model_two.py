@@ -64,7 +64,7 @@ def save_bottlebeck_features():
         shuffle=False)
     print('2.1')
     bottleneck_features_test = model.predict_generator(
-        generator, nb_validation_samples // batch_size)
+        generator, nb_test_samples // batch_size)
     print('2.2')
     np.save(open('bottleneck_features_test.npy', 'wb'),
             bottleneck_features_test)
@@ -105,6 +105,7 @@ def train_top_model():
     #                     epochs=epochs,
     #                     batch_size=batch_size,
     #                     validation_data=(test_data, test_labels))
+
     scores = model.evaluate(test_data, test_labels,
                             batch_size=batch_size,
                             verbose=1,

@@ -101,10 +101,15 @@ def train_top_model():
     model.save_weights(top_model_weights_path)
     model.save('second_model.h5')
 
+    # scores = model.evaluate(test_data, test_labels,
+    #                     epochs=epochs,
+    #                     batch_size=batch_size,
+    #                     validation_data=(test_data, test_labels))
     scores = model.evaluate(test_data, test_labels,
-                        epochs=epochs,
-                        batch_size=batch_size,
-                        validation_data=(test_data, test_labels))
+                            batch_size=batch_size,
+                            verbose=1,
+                            sample_weight=None,
+                            steps=epochs)
     print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)

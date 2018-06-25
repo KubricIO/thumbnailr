@@ -16,7 +16,7 @@ test_data_dir = './th_data4/test'
 
 nb_train_samples = 3472
 nb_validation_samples =736
-nb_test_samples=200
+nb_test_samples=128
 epochs =10 
 batch_size = 16
 # fix random seed for reproducibility

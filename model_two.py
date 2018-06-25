@@ -109,7 +109,7 @@ def train_top_model():
                             batch_size=batch_size,
                             verbose=1,
                             sample_weight=None,
-                            steps=epochs)
+                            steps=None)
     print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)

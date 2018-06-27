@@ -23,8 +23,8 @@ def get_filecount(path_to_directory):
         print("path does not exist")
         return 0
 
-epochs =10 
-batch_size = 8
+epochs =20
+batch_size = 16
 
 nb_good_samples = get_filecount("th_data4/train/good")
 nb_bad_samples = get_filecount("th_data4/train/bad")

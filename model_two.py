@@ -102,15 +102,15 @@ def save_bottlebeck_features():
 def train_top_model():
     print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy','rb'))
-    train_labels = np.array([0]*nb_good_samples + [1]*nb_bad_samples)
+    train_labels = np.array([0]*int(nb_good_samples) + [1]*int(nb_bad_samples))
         # [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
 
     validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
     validation_labels = np.array(
-        [0] * int(nb_validation_samples / 2) + [1] * int(nb_validation_samples / 2))
+        [0] * int(nb_val_good_samples) + [1] * int(nb_val_bad_samples))
 
     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-    test_labels = np.array([0]*int(nb_test_samples))
+    test_labels = np.array([0]*int(nb_test_good)+[1]*int(nb_test_bad))
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Sequential()

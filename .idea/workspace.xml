@@ -28,10 +28,11 @@
       <file leaf-file-name="model_two.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model_two.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="104" column="79" selection-start-line="104" selection-start-column="79" selection-end-line="104" selection-end-column="79" />
+            <state relative-caret-position="398">
+              <caret line="133" column="40" selection-start-line="133" selection-start-column="40" selection-end-line="133" selection-end-column="40" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#3908#3952#0" />
               </folding>
             </state>
           </provider>
@@ -190,6 +191,7 @@
           <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#3908#3952#0" />
           </folding>
         </state>
       </provider>
@@ -273,10 +275,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model_two.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="104" column="79" selection-start-line="104" selection-start-column="79" selection-end-line="104" selection-end-column="79" />
+        <state relative-caret-position="398">
+          <caret line="133" column="40" selection-start-line="133" selection-start-column="40" selection-end-line="133" selection-end-column="40" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#3908#3952#0" />
           </folding>
         </state>
       </provider>

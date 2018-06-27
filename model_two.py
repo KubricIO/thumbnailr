@@ -4,6 +4,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
+import datetime
 
 # dimensions of our images.
 img_width, img_height = 150, 150
@@ -128,7 +129,9 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
-    model.save('second_model.h5')
+    name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    model.save('model_two.h5')
+    os.rename('model_two.h5','model_two_'+name+'.h5')
 
     # scores = model.evaluate(test_data, test_labels,
     #                     epochs=epochs,

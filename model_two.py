@@ -24,7 +24,7 @@ def get_filecount(path_to_directory):
         return 0
 
 epochs =20
-batch_size = 16
+batch_size = 4
 
 nb_good_samples = get_filecount("th_data4/train/good")
 nb_bad_samples = get_filecount("th_data4/train/bad")

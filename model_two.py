@@ -20,7 +20,8 @@ nb_bad_samples = 1488
 nb_validation_samples =736
 nb_test_samples=128
 epochs =10 
-batch_size = 16
+batch_size = 8
+nb_bad_samples = nb_bad_samples - nb_bad_samples % batch_size
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)

@@ -15,6 +15,8 @@ validation_data_dir = './th_data4/validation'
 test_data_dir = './th_data4/test'
 
 nb_train_samples = 3472
+nb_good_samples = 1989
+nb_bad_samples = 1488
 nb_validation_samples =736
 nb_test_samples=128
 epochs =10 
@@ -73,8 +75,8 @@ def save_bottlebeck_features():
 def train_top_model():
     print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy','rb'))
-    train_labels = np.array(
-        [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
+    train_labels = np.array([0]*nb_good_samples + [1]*nb_bad_samples)
+        # [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
 
     validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
     validation_labels = np.array(

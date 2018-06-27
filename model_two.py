@@ -1,6 +1,5 @@
 import numpy as np
-
-
+import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
@@ -14,14 +13,41 @@ train_data_dir = './th_data4/train'
 validation_data_dir = './th_data4/validation'
 test_data_dir = './th_data4/test'
 
-nb_train_samples = 3472
-nb_good_samples = 1989
-nb_bad_samples = 1488
-nb_validation_samples =736
-nb_test_samples=128
+def get_filecount(path_to_directory):
+    if os.path.exists(path_to_directory):
+        path,dirs,files = os.walk(path_to_directory).__next__()
+        file_count = len(files)
+        return file_count
+    else :
+        print("path does not exist")
+        return 0
+
 epochs =10 
 batch_size = 8
+
+nb_good_samples = get_filecount("th_data4/train/good")
+nb_bad_samples = get_filecount("th_data4/train/bad")
+# nb_train_samples = 3472
+
 nb_bad_samples = nb_bad_samples - nb_bad_samples % batch_size
+nb_good_samples = nb_good_samples - nb_good_samples % batch_size
+nb_train_samples = nb_good_samples + nb_bad_samples
+
+nb_val_good_samples = get_filecount("th_data4/validation/good")
+nb_val_bad_samples = get_filecount("th_data4/validation/bad")
+# nb_validation_samples =740
+
+nb_val_good_samples = nb_val_good_samples - nb_val_good_samples % batch_size
+nb_val_bad_samples = nb_val_bad_samples - nb_val_bad_samples % batch_size
+nb_validation_samples = nb_val_bad_samples + nb_val_good_samples
+
+nb_test_good=get_filecount("th_data4/test/good")
+nb_test_bad =get_filecount("th_data4/test/bad")
+
+nb_test_bad = nb_test_bad - nb_test_bad % batch_size
+nb_test_good = nb_test_good - nb_test_good % batch_size
+nb_test = nb_test_good + nb_test_bad
+
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)

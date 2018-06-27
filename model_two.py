@@ -46,7 +46,7 @@ nb_test_bad =get_filecount("th_data4/test/bad")
 
 nb_test_bad = nb_test_bad - nb_test_bad % batch_size
 nb_test_good = nb_test_good - nb_test_good % batch_size
-nb_test = nb_test_good + nb_test_bad
+nb_test_samples = nb_test_good + nb_test_bad
 
 # fix random seed for reproducibility
 seed = 7

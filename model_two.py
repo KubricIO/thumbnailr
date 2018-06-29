@@ -59,32 +59,33 @@ def save_bottlebeck_features():
 
     # build the VGG16 network
     model = applications.VGG16(include_top=False, weights='imagenet')
-    print('1')
+    print('1, VGG16 model has loaded')
+
+
     generator = datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
-    print('1.1')
     bottleneck_features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
-    print('1.2')
     np.save(open('bottleneck_features_train.npy', 'wb'),
             bottleneck_features_train)
-    print('1.3')
+    print("bottleneck features for the training data has been stored")
+
+
     generator = datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
-    print('1.4')
     bottleneck_features_validation = model.predict_generator(
         generator, nb_validation_samples // batch_size)
-    print('2')
     np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
+    print("bottleneck features for the validation data has been stored")
 
     generator = datagen.flow_from_directory(
         test_data_dir,
@@ -92,12 +93,11 @@ def save_bottlebeck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
-    print('2.1')
     bottleneck_features_test = model.predict_generator(
         generator, nb_test_samples // batch_size)
-    print('2.2')
     np.save(open('bottleneck_features_test.npy', 'wb'),
             bottleneck_features_test)
+    print("bottleneck features for the test data has been stored")
 
 
 def train_top_model():
@@ -115,8 +115,11 @@ def train_top_model():
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Sequential()
+    print("shape before the flatten = ", model.output_shape)
     model.add(Flatten(input_shape=train_data.shape[1:]))
+    print("shape after the flatten = ",model.output_shape)
     model.add(Dense(256, activation='relu'))
+    print("shape after the dense 1 = ", model.output_shape)
     model.add(Dropout(0.5))
     model.add(Dense(256, activation='relu'))
     model.add(Dense(2, activation='softmax'))

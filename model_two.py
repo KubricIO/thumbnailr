@@ -116,6 +116,7 @@ def train_top_model():
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Model(inputs=train_data, outputs=train_labels, name='thumbnailr 1')
+    
     # model = Sequential()
 
     print("shape before the flatten = ", model.output_shape)
@@ -127,8 +128,8 @@ def train_top_model():
     print("shape after the dense 1 = ", model.output_shape)
     model.add(Dropout(0.5))
 
-    model.add(Dense(256, activation='relu'))
-    model.add(Dense(2, activation='softmax'))
+
+    model.add(Dense(1, activation='softmax'))
     print('3')
     model.compile(optimizer='Adam',
                   loss='binary_crossentropy', metrics=['accuracy'])

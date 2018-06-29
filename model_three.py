@@ -17,7 +17,7 @@ start = time.clock()
 top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './th_data4/train'
 validation_data_dir = './th_data4/validation'
-test_data_dir = './th_data4/test'
+test_data_dir = './th_data4/test/good'
 
 def get_filecount(path_to_directory):
     if os.path.exists(path_to_directory):
@@ -59,7 +59,7 @@ seed = 7
 np.random.seed(seed)
 
 def save_bottlebeck_features():
-    print('saving bottleneck_features...')
+    print('\n\nsaving bottleneck_features...')
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network

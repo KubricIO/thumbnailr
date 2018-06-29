@@ -4,11 +4,15 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential , Model
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
+from keras import initializers
+from keras import regularizers
 from keras.optimizers import Adam
 import datetime
+import time
 
 # dimensions of our images.
 img_width, img_height = 150, 150
+start = time.clock()
 
 top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './th_data4/train'
@@ -24,7 +28,7 @@ def get_filecount(path_to_directory):
         print("path does not exist")
         return 0
 
-epochs =20
+epochs =10
 batch_size = 8
 
 nb_good_samples = get_filecount("th_data4/train/good")
@@ -100,62 +104,32 @@ def save_bottlebeck_features():
             bottleneck_features_test)
     print("bottleneck features for the test data has been stored")
 
-def model(input_shape):
-    # Define the input placeholder as a tensor with shape input_shape. Think of this as your input image!
-    X_input = Input(input_shape)
-
-    # Zero-Padding: pads the border of X_input with zeroes
-    X = ZeroPadding2D((3, 3))(X_input)
-
-    # CONV -> BN -> RELU Block applied to X
-    X = Conv2D(32, (7, 7), strides = (1, 1), name = 'conv0')(X)
-    X = BatchNormalization(axis = 3, name = 'bn0')(X)
-    X = Activation('relu')(X)
-
-    # MAXPOOL
-    X = MaxPooling2D((2, 2), name='max_pool')(X)
-
-    # FLATTEN X (means convert it to a vector) + FULLYCONNECTED
-    X = Flatten()(X)
-    X = Dense(1, activation='sigmoid', name='fc')(X)
-
-    # Create model. This creates your Keras model instance, you'll use this instance to train/test the model.
-    model = Model(inputs = X_input, outputs = X, name='HappyModel')
-
-    return model
-
-
 
 def train_top_model():
     print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy','rb'))
-    train_labels = np.array([0]*int(nb_good_samples) + [1]*int(nb_bad_samples))
+    train_labels = np.array([0]*int(nb_bad_samples) + [1]*int(nb_good_samples))
         # [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
 
     validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
     validation_labels = np.array(
-        [0] * int(nb_val_good_samples) + [1] * int(nb_val_bad_samples))
+        [0] * int(nb_val_bad_samples) + [1] * int(nb_val_good_samples))
 
     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-    test_labels = np.array([0]*int(nb_test_good)+[1]*int(nb_test_bad))
+    test_labels = np.array([0]*int(nb_test_bad)+[1]*int(nb_test_good))
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
-    model = Model(inputs=train_data, outputs=train_labels, name='thumbnailr 1')
-    # model = Sequential()
+    model = Sequential()
 
-    print("shape before the flatten = ", model.output_shape)
     model.add(Flatten(input_shape=train_data.shape[1:]))
-
-    print("shape after the flatten = ",model.output_shape)
-    model.add(Dense(256, activation='relu'))
-
-    print("shape after the dense 1 = ", model.output_shape)
-    model.add(Dropout(0.5))
-
-    model.add(Dense(256, activation='relu'))
-    model.add(Dense(2, activation='softmax'))
+    model.add(Dense(256,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
+                    activation='relu'))
+    model.add(Dropout(0.6))
+    model.add(Dense(1, activation='softmax'))
     print('3')
-    model.compile(optimizer='Adam',
+
+    adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    model.compile(optimizer=adam,
                   loss='binary_crossentropy', metrics=['accuracy'])
 
     print ("shape of the model output = ",model.output_shape)
@@ -173,12 +147,17 @@ def train_top_model():
     #                     batch_size=batch_size,
     #                     validation_data=(test_data, test_labels))
 
-    scores = model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=1,
-                            sample_weight=None,
-                            steps=None)
-    print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+    # scores = model.evaluate(test_data, test_labels,
+    #                         batch_size=batch_size,
+    #                         verbose=2,
+    #                         sample_weight=None,
+    #                         steps=None)
+
+    scores = model.predict(test_data , batch_size = batch_size , verbose = 2 )
+    print ("\n\n")
+    print (scores)
+    print ("\n\n")
+    # print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)
    # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
@@ -202,7 +181,8 @@ def train_top_model():
 #    plt.plot(scores.scores['val_acc'])
 #    plt.title('test accuracy')
 #    plt.show()
-    print('4')
+    print('4 : Done and Dusted')
 
 save_bottlebeck_features()
 train_top_model()
+print("time taken =", time.clock() - start)

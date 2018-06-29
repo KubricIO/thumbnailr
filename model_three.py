@@ -8,9 +8,11 @@ from keras import initializers
 from keras import regularizers
 from keras.optimizers import Adam
 import datetime
+import time
 
 # dimensions of our images.
 img_width, img_height = 150, 150
+start = time.clock()
 
 top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './th_data4/train'
@@ -151,7 +153,7 @@ def train_top_model():
     #                         sample_weight=None,
     #                         steps=None)
 
-    scores = model.predict(test_data , batch_size = batch_size , verbose = 2 , step = None)
+    scores = model.predict(test_data , batch_size = batch_size , verbose = 2 )
     print ("\n\n")
     print (scores)
     print ("\n\n")
@@ -183,3 +185,4 @@ def train_top_model():
 
 save_bottlebeck_features()
 train_top_model()
+print("time taken =", time.clock() - start)

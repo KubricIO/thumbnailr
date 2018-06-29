@@ -117,13 +117,13 @@ def train_top_model():
 
     model = Sequential()
 
-    print("shape before the flatten = ", model.output_shape)
+    # print("shape before the flatten = ", model.output_shape)
     model.add(Flatten(input_shape=train_data.shape[1:]))
 
-    print("shape after the flatten = ",model.output_shape)
+    # print("shape after the flatten = ",model.output_shape)
     model.add(Dense(256, activation='relu'))
 
-    print("shape after the dense 1 = ", model.output_shape)
+    # print("shape after the dense 1 = ", model.output_shape)
     model.add(Dropout(0.5))
 
 

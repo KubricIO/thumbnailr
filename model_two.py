@@ -24,7 +24,7 @@ def get_filecount(path_to_directory):
         return 0
 
 epochs =20
-batch_size = 4
+batch_size = 8
 
 nb_good_samples = get_filecount("th_data4/train/good")
 nb_bad_samples = get_filecount("th_data4/train/bad")
@@ -118,9 +118,9 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(2, activation='sigmoid'))
     print('3')
-    model.compile(optimizer='rmsprop',
+    model.compile(optimizer='adam',
                   loss='binary_crossentropy', metrics=['accuracy'])
 
 

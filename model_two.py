@@ -127,14 +127,14 @@ def train_top_model():
     model.add(Dropout(0.5))
 
 
-    model.add(Dense(1, activation='softmax'))
+    model.add(Dense(2, activation='softmax'))
     print('3')
 
-    adam = Adam()
+    # adam = Adam()
     model.compile(optimizer='rmsprop',
                   loss='binary_crossentropy', metrics=['accuracy'])
 
-    print ("shape of the model output = ",model.output_shape)
+    # print ("shape of the model output = ",model.output_shape)
     model.fit(train_data, train_labels,
               epochs=epochs,
               batch_size=batch_size,

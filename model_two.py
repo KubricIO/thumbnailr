@@ -124,11 +124,11 @@ def train_top_model():
                   loss='binary_crossentropy', metrics=['accuracy'])
 
 
-    history = model.fit(train_data, train_labels,
+    model.fit(train_data, train_labels,
               epochs=epochs,
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels))
-    model.save_weights(top_model_weights_path)
+    # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_two.h5')
     os.rename('model_two.h5','model_two_'+name+'.h5')

@@ -118,7 +118,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(2, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
     print('3')
     model.compile(optimizer='adam',
                   loss='binary_crossentropy', metrics=['accuracy'])

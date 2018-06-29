@@ -115,16 +115,14 @@ def train_top_model():
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Sequential()
-    # model.compile(self, optimizer, loss=None, metrics=None, loss_weights=None, sample_weight_mode=None, weighted_metrics=None,
-    #         target_tensors=None)
 
-    print("shape before the flatten = ", model.output_shape)
+    # print("shape before the flatten = ", model.output_shape)
     model.add(Flatten(input_shape=train_data.shape[1:], name='train_data'))
 
-    print("shape after the flatten = ",model.output_shape)
+    # print("shape after the flatten = ",model.output_shape)
     model.add(Dense(256, activation='relu'))
 
-    print("shape after the dense 1 = ", model.output_shape)
+    # print("shape after the dense 1 = ", model.output_shape)
     model.add(Dropout(0.5))
 
     model.add(Dense(256, activation='relu'))
@@ -133,7 +131,7 @@ def train_top_model():
     model.compile(optimizer='adam',
                   loss='binary_crossentropy', metrics=['accuracy'])
 
-
+    print ("shape of the model output = ",model.output_shape)
     model.fit(train_data, train_labels,
               epochs=epochs,
               batch_size=batch_size,

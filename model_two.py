@@ -131,7 +131,7 @@ def train_top_model():
     print('3')
 
     adam = Adam()
-    model.compile(optimizer='adam',
+    model.compile(optimizer='rmsprop',
                   loss='binary_crossentropy', metrics=['accuracy'])
 
     print ("shape of the model output = ",model.output_shape)

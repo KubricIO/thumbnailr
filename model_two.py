@@ -114,10 +114,11 @@ def train_top_model():
     test_labels = np.array([0]*int(nb_test_good)+[1]*int(nb_test_bad))
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
-    model = Sequential()
+    model = Sequential(inputs=train_data, outputs=train_labels, name='thumbnailr 1')
+    # model = Sequential()
 
     # print("shape before the flatten = ", model.output_shape)
-    model.add(Flatten(input_shape=train_data.shape[1:], name='train_data'))
+    model.add(Flatten(input_shape=train_data.shape[1:]))
 
     # print("shape after the flatten = ",model.output_shape)
     model.add(Dense(256, activation='relu'))

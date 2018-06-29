@@ -4,6 +4,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
+from keras.optimizers import Adam
 import datetime
 
 # dimensions of our images.
@@ -114,22 +115,22 @@ def train_top_model():
     test_labels = np.array([0]*int(nb_test_good)+[1]*int(nb_test_bad))
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
-    model = Sequential(inputs=train_data, outputs=train_labels, name='thumbnailr 1')
+    model = Sequential(input=train_data, outputs=train_labels, name='thumbnailr 1')
     # model = Sequential()
 
-    # print("shape before the flatten = ", model.output_shape)
+    print("shape before the flatten = ", model.output_shape)
     model.add(Flatten(input_shape=train_data.shape[1:]))
 
-    # print("shape after the flatten = ",model.output_shape)
+    print("shape after the flatten = ",model.output_shape)
     model.add(Dense(256, activation='relu'))
 
-    # print("shape after the dense 1 = ", model.output_shape)
+    print("shape after the dense 1 = ", model.output_shape)
     model.add(Dropout(0.5))
 
     model.add(Dense(256, activation='relu'))
     model.add(Dense(2, activation='softmax'))
     print('3')
-    model.compile(optimizer='adam',
+    model.compile(optimizer='Adam',
                   loss='binary_crossentropy', metrics=['accuracy'])
 
     print ("shape of the model output = ",model.output_shape)

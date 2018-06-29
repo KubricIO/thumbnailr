@@ -1,7 +1,7 @@
 import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
+from keras.models import Sequential , Model
 from keras.layers import Dropout, Flatten, Dense
 from keras import applications
 from keras.optimizers import Adam
@@ -115,7 +115,7 @@ def train_top_model():
     test_labels = np.array([0]*int(nb_test_good)+[1]*int(nb_test_bad))
         # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
-    model = Sequential(input=train_data, outputs=train_labels, name='thumbnailr 1')
+    model = Model(inputs=train_data, outputs=train_labels, name='thumbnailr 1')
     # model = Sequential()
 
     print("shape before the flatten = ", model.output_shape)

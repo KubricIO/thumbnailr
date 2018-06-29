@@ -26,7 +26,7 @@ def get_filecount(path_to_directory):
         print("path does not exist")
         return 0
 
-epochs =20
+epochs =10
 batch_size = 8
 
 nb_good_samples = get_filecount("th_data4/train/good")
@@ -145,15 +145,17 @@ def train_top_model():
     #                     batch_size=batch_size,
     #                     validation_data=(test_data, test_labels))
 
-    scores = model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=2,
-                            sample_weight=None,
-                            steps=None)
+    # scores = model.evaluate(test_data, test_labels,
+    #                         batch_size=batch_size,
+    #                         verbose=2,
+    #                         sample_weight=None,
+    #                         steps=None)
+
+    scores = model.predict(test_data , batch_size = batch_size , verbose = 2 , step = None)
     print ("\n\n")
-    print (model.metrics_names)
+    print (scores)
     print ("\n\n")
-    print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+    # print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)
    # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))

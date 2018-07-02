@@ -62,7 +62,7 @@ def save_bottlebeck_features():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
-    model = applications.VGG16 (include_top=False, weights='imagenet', classes='2')
+    model = applications.VGG16 (include_top=False, weights='imagenet', classes=2)
     print('1, VGG16 model has been loaded\n')
 
     # For the training data
@@ -131,7 +131,7 @@ def train_top_model():
     adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
-    optimizer = sgd
+    optimizer = adam
     # optimizer = adam
     model.compile(optimizer=optimizer,
                   loss='binary_crossentropy', metrics=['accuracy'])
@@ -151,17 +151,17 @@ def train_top_model():
     #                     batch_size=batch_size,
     #                     validation_data=(test_data, test_labels))
 
-    # scores = model.evaluate(test_data, test_labels,
-    #                         batch_size=batch_size,
-    #                         verbose=2,
-    #                         sample_weight=None,
-    #                         steps=None)
+    scores = model.evaluate(test_data, test_labels,
+                            batch_size=batch_size,
+                            verbose=2,
+                            sample_weight=None,
+                            steps=None)
 
-    scores = model.predict(test_data , batch_size = batch_size , verbose = 2 )
+    scores1 = model.predict(test_data , batch_size = batch_size , verbose = 2 )
     print ("\n\n")
-    print (scores)
+    print (scores1)
     print ("\n\n")
-    # print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+    print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)
    # print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
@@ -189,4 +189,4 @@ def train_top_model():
 
 save_bottlebeck_features()
 train_top_model()
-print("time taken =", time.clock() - start)
+print("\n\ntime taken =", time.clock() - start)

@@ -143,7 +143,7 @@ def train_top_model():
               validation_data=(validation_data, validation_labels))
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-    model.save('model_two_sgd.h5')
+    model.save('model_two_sgd2.h5')
     # model.save('model_two.h5')
     # os.rename('model_two.h5','model_two_'+name+ 'sgd' +'.h5')
 

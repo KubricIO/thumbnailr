@@ -62,7 +62,7 @@ def save_bottlebeck_features():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
-    model = applications.VGG16 (include_top=False, weights='imagenet', classes = '2')
+    model = applications.VGG16 (include_top=False, weights='imagenet', classes='2')
     print('1, VGG16 model has been loaded\n')
 
     # For the training data

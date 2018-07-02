@@ -16,7 +16,7 @@ start = time.clock()
 top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './th_data4/train'
 validation_data_dir = './th_data4/validation'
-test_data_dir = './th_data4/test/good'
+test_data_dir = './th_data4/test'
 
 def get_filecount(path_to_directory):
     if os.path.exists(path_to_directory):

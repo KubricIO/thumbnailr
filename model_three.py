@@ -161,6 +161,10 @@ def train_top_model():
     print ("\n\n")
     print (scores1)
     print ("\n\n")
+    print (scores)
+    print ("\n\n")
+    diff = scores - scores1
+    print (diff)
     print("test_acc: ","%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
    # loss, acc =model.evaluate(x, y, verbose=0)

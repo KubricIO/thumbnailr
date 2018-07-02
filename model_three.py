@@ -4,7 +4,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential , Model
 from keras.layers import Dropout, Flatten, Dense
 from keras import initializers , regularizers , applications
-from keras.optimizers import Adam
+from keras.optimizers import Adam , SGD
 import datetime
 import time
 from keras import backend as K
@@ -109,27 +109,31 @@ def train_top_model():
     print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy','rb'))
     train_labels = np.array([0]*int(nb_bad_samples) + [1]*int(nb_good_samples))
-        # [0] * int(nb_train_samples / 2) + [1] * int(nb_train_samples / 2))
 
     validation_data = np.load(open('bottleneck_features_validation.npy','rb'))
-    validation_labels = np.array(
-        [0] * int(nb_val_bad_samples) + [1] * int(nb_val_good_samples))
+    validation_labels = np.array([0] * int(nb_val_bad_samples) + [1] * int(nb_val_good_samples))
 
     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
     test_labels = np.array([0]*int(nb_test_bad)+[1]*int(nb_test_good))
-        # [0] * int(nb_test_samples / 2) + [1] * int(nb_test_samples / 2))
 
     model = Sequential()
 
     model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(256,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
+    model.add(Dense(4096,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
                     activation='relu'))
+    model.add(Dropout(0.6))
+    model.add(Dense(256, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+              activation='relu'))
     model.add(Dropout(0.6))
     model.add(Dense(2, activation='sigmoid'))
     print('3')
 
     adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-    model.compile(optimizer=adam,
+    sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
+
+    optimizer = sgd
+    # optimizer = adam
+    model.compile(optimizer=optimizer,
                   loss='binary_crossentropy', metrics=['accuracy'])
 
     print ("shape of the model output = ",model.output_shape)
@@ -140,7 +144,7 @@ def train_top_model():
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_two.h5')
-    os.rename('model_two.h5','model_two_'+name+'.h5')
+    os.rename('model_two.h5','model_two_'+name+ str(optimizer) +'.h5')
 
     # scores = model.evaluate(test_data, test_labels,
     #                     epochs=epochs,

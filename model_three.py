@@ -3,12 +3,11 @@ import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential , Model
 from keras.layers import Dropout, Flatten, Dense
-from keras import applications
-from keras import initializers
-from keras import regularizers
+from keras import initializers , regularizers , applications
 from keras.optimizers import Adam
 import datetime
 import time
+from keras import backend as K
 
 # dimensions of our images.
 img_width, img_height = 150, 150
@@ -63,10 +62,10 @@ def save_bottlebeck_features():
     datagen = ImageDataGenerator(rescale=1. / 255)
 
     # build the VGG16 network
-    model = applications.VGG16(include_top=False, weights='imagenet')
+    model = applications.VGG16 (include_top=False, weights='imagenet', classes = '2')
     print('1, VGG16 model has been loaded\n')
 
-
+    # For the training data
     generator = datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
@@ -79,7 +78,7 @@ def save_bottlebeck_features():
             bottleneck_features_train)
     print("bottleneck features for the training data has been stored")
 
-
+    # for the validation data
     generator = datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_width, img_height),
@@ -92,6 +91,7 @@ def save_bottlebeck_features():
             bottleneck_features_validation)
     print("bottleneck features for the validation data has been stored")
 
+    # For the test data
     generator = datagen.flow_from_directory(
         test_data_dir,
         target_size=(img_width, img_height),
@@ -125,7 +125,7 @@ def train_top_model():
     model.add(Dense(256,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
                     activation='relu'))
     model.add(Dropout(0.6))
-    model.add(Dense(1, activation='softmax'))
+    model.add(Dense(2, activation='sigmoid'))
     print('3')
 
     adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)

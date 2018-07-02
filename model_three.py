@@ -131,8 +131,8 @@ def train_top_model():
     adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
-    optimizer = sgd
-    # optimizer = adam
+    # optimizer = sgd
+    optimizer = adam
     model.compile(optimizer=optimizer,
                   loss='binary_crossentropy', metrics=['accuracy'])
 
@@ -143,7 +143,7 @@ def train_top_model():
               validation_data=(validation_data, validation_labels))
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-    model.save('model_two_sgd2.h5')
+    model.save('model_two_adam2.h5')
     # model.save('model_two.h5')
     # os.rename('model_two.h5','model_two_'+name+ 'sgd' +'.h5')
 

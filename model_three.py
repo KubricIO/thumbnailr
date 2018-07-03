@@ -2,7 +2,7 @@ import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential , Model
-from keras.layers import Dropout, Flatten, Dense , Conv2D
+from keras.layers import Dropout, Flatten, Dense , Conv2D, MaxPooling2D , Concatenate
 from keras import initializers , regularizers , applications
 from keras.optimizers import Adam , SGD
 import datetime
@@ -120,7 +120,29 @@ def train_top_model():
 
     # Inception Model
 
-    model.add(Conv2D(512, (3, 3), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    Block1 = Sequential()
+    Block2 = Sequential()
+    Block3 = Sequential()
+    Block4 = Sequential()
+
+    Block1.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    Block1.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+
+    Block2.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    Block2.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
+
+    Block3.add(Conv2D(128, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
+
+    Block4.add(Conv2D(256, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
+    Block4.add(MaxPooling2D(pool_size=(2, 2), strides=1, padding='same'))
+
+    merged = Concatenate( [Block1, Block2, Block3, Block4], axis=channel_axis)
+
+    model.add(merged)
+
+    # Inception over
+    
+    # model.add(Conv2D(512, (3, 3), activation='relu', padding='same',input_shape=train_data.shape[1:]))
 
     model.add(Flatten())
     model.add(Dense(4096,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),

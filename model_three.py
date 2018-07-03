@@ -120,9 +120,9 @@ def train_top_model():
 
     # Inception Model
 
-    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same',input_shape=train_data.shape[1:]))
 
-    model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Flatten())
     model.add(Dense(4096,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
                     activation='relu'))
     model.add(Dropout(0.6))

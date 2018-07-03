@@ -136,9 +136,9 @@ def train_top_model():
     Block4.add(Conv2D(256, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
     Block4.add(MaxPooling2D(pool_size=(2, 2), strides=1, padding='same'))
 
-    merged = Concatenate( [Block1, Block2, Block3, Block4])
+    merged = Concatenate( [Block1, Block2, Block3, Block4] )
 
-    model.add(merged)
+    model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
 

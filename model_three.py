@@ -2,7 +2,7 @@ import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential , Model
-from keras.layers import Dropout, Flatten, Dense
+from keras.layers import Dropout, Flatten, Dense , Conv2D
 from keras import initializers , regularizers , applications
 from keras.optimizers import Adam , SGD
 import datetime
@@ -118,6 +118,10 @@ def train_top_model():
 
     model = Sequential()
 
+    # Inception Model
+
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
                     activation='relu'))
@@ -143,7 +147,7 @@ def train_top_model():
               validation_data=(validation_data, validation_labels))
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-    model.save('model_two_adam2.h5')
+    model.save('model_two_adam2_with_conv2D.h5')
     # model.save('model_two.h5')
     # os.rename('model_two.h5','model_two_'+name+ 'sgd' +'.h5')
 

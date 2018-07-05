@@ -120,29 +120,29 @@ def train_top_model():
 
     # Inception Model
 
-    Block1 = Sequential()
-    Block2 = Sequential()
-    Block3 = Sequential()
-    Block4 = Sequential()
-
-    Block1.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
-    Block1.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-
-    Block2.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
-    Block2.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
-
-    Block3.add(Conv2D(128, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
-
-    Block4.add(Conv2D(256, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
-    Block4.add(MaxPooling2D(pool_size=(2, 2), strides=1, padding='same'))
-
-    model.add(Concatenate([Block1, Block2, Block3, Block4],input_shape=train_data.shape[1:]))
+    # Block1 = Sequential()
+    # Block2 = Sequential()
+    # Block3 = Sequential()
+    # Block4 = Sequential()
+    #
+    # Block1.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    # Block1.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    #
+    # Block2.add(Conv2D(256, (1, 1), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    # Block2.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
+    #
+    # Block3.add(Conv2D(128, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
+    #
+    # Block4.add(Conv2D(256, (1, 1), activation='relu', padding='same', input_shape=train_data.shape[1:]))
+    # Block4.add(MaxPooling2D(pool_size=(2, 2), strides=1, padding='same'))
+    #
+    # model.add(Concatenate([Block1, Block2, Block3, Block4],input_shape=train_data.shape[1:]))
 
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
 
-    # model.add(Conv2D(512, (3, 3), activation='relu', padding='same',input_shape=train_data.shape[1:]))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same',input_shape=train_data.shape[1:]))
 
     model.add(Flatten())
     model.add(Dense(4096,kernel_initializer=initializers.glorot_uniform(seed = None),kernel_regularizer=regularizers.l2(0.01),
@@ -151,6 +151,8 @@ def train_top_model():
     model.add(Dense(256, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
     model.add(Dropout(0.6))
+    model.add(Dense(2, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+              activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
     print('3')
 

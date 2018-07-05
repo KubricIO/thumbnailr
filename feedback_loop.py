@@ -1,5 +1,7 @@
 import cv2
 import os
+from PIL import Image
+
 import numpy as np
 import requests
 #import urllib2
@@ -17,18 +19,21 @@ def get_filecount(path_to_directory):
         return 0
 
 
-path = '/home/akhil/thumbnailr/overall'   # change the path to directory
+path = '/home/akhil/thumbnailr/overall/'   # change the path to directory
+if not os.path.isdir(path):
+    os.makedirs(path)
+
 files = os.listdir(path)
 count = get_filecount(path)
+print(count)
 
 def feedback_loop():
 
-
     for i in range(count):
         print ("i = ",i)
-        img = cv2.imread(str(i+1)+'.jpg', 0)
-        cv2.imshow("image",img)
-        cv2.waitKey(0)
+        image = Image.open(path + str(i+1) + '.jpg')
+        image.show()
+        cv2.waitKey(1000)
         cv2.destroyAllWindows()
         i +=1
 

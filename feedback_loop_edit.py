@@ -30,18 +30,13 @@ print(count)
 
 def feedback_loop():
 
-    for i in range(2):
+    for i in range(5):
         print ("i = ",i)
-        #p = subprocess.Popen(path + str(i + 1) + '.jpg')
-        #folder = input()
-        #p.kill()
         image = Image.open(path + str(i + 1) + '.jpg',"r")
         image.show()
         folder = input()
-        #os.kill()
+        os.popen('killall display')
         image.close()
-        #cv2.waitKey(1000)
-        #cv2.destroyAllWindows()
         i +=1
 
 

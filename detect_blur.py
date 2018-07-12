@@ -4,6 +4,8 @@
 # import the necessary packages
 from imutils import paths
 import argparse
+import shutil
+import os
 import cv2
 
 def variance_of_laplacian(image):
@@ -12,15 +14,15 @@ def variance_of_laplacian(image):
 	return cv2.Laplacian(image, cv2.CV_64F).var()
 
 # construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--images", required=True,
-	help="path to input directory of images")
-ap.add_argument("-t", "--threshold", type=float, default=100.0,
-	help="focus measures that fall below this value will be considered 'blurry'")
-args = vars(ap.parse_args())
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--images", required=True,
+# 	help="path to input directory of images")
+# ap.add_argument("-t", "--threshold", type=float, default=100.0,
+# 	help="focus measures that fall below this value will be considered 'blurry'")
+# args = vars(ap.parse_args())
 
 # loop over the input images
-for imagePath in paths.list_images(args["images"]):
+for imagePath in paths.list_images("th_data4/train/good/"):
 	# load the image, convert it to grayscale, and compute the
 	# focus measure of the image using the Variance of Laplacian
 	# method
@@ -31,11 +33,16 @@ for imagePath in paths.list_images(args["images"]):
 
 	# if the focus measure is less than the supplied threshold,
 	# then the image should be considered "blurry"
-	if fm < args["threshold"]:
+	if fm < 50:
 		text = "Blurry"
+		imageName=imagePath.split('/')[-1]
+		if not os.path.isdir("Blurry"):
+			os.makedirs("Blurry")
+		shutil.copy(imagePath, os.path.join("Blurry",imageName))
 
 	# show the image
-	cv2.putText(image, "{}: {:.2f}".format(text, fm), (10, 30),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
-	cv2.imshow("Image", image)
-	key = cv2.waitKey(0)
+	# cv2.putText(image, "{}: {:.2f}".format(text, fm), (10, 30),
+	# 	cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 3)
+	# cv2.imshow("Image", image)
+	# key = cv2.waitKey(0)
+

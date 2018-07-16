@@ -197,6 +197,8 @@ def train_top_model():
     optimizer = adam
     model.compile(optimizer=optimizer,
                   loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    print(len(train_data))
+    print(len(train_labels))
     print(len(validation_data))
     print(len(validation_labels))
 

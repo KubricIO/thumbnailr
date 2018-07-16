@@ -231,6 +231,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-#save_bottlebeck_features()
+save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

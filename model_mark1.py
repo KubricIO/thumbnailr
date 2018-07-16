@@ -109,6 +109,7 @@ def save_bottlebeck_features():
         shuffle=False)
     bottleneck_features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
+
     np.save(open('bottleneck_features_train.npy', 'wb'),
             bottleneck_features_train)
     print("bottleneck features for the training data has been stored")
@@ -148,9 +149,8 @@ def train_top_model():
             nb_train_4_samples) + [2] * int(nb_train_5_samples))
 
     validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
-    validation_labels = np.array(
-        [-2] * int(nb_val_1_samples) + [-1] * int(nb_val_2_samples) + [0] * int(nb_val_3_samples)[1] *
-        int(nb_val_4_samples)[2] * int(nb_val_5_samples))
+    validation_labels = np.array([-2] * int(nb_val_1_samples) + [-1] * int(nb_val_2_samples) + [0] * int(nb_val_3_samples) +[1] *
+        int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
 
     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
     test_labels = np.array(
@@ -184,18 +184,10 @@ def train_top_model():
     # Inception over
 
     model.add(Flatten())
-    model.add(
-        Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
     model.add(Dropout(0.6))
-    model.add(
-        Dense(256, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-              activation='relu'))
-    model.add(Dropout(0.6))
-    model.add(
-        Dense(2, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-              activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(5, activation='softmax'))
     print('3')
 
     adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
@@ -204,7 +196,7 @@ def train_top_model():
     # optimizer = sgd
     optimizer = adam
     model.compile(optimizer=optimizer,
-                  loss='binary_crossentropy', metrics=['accuracy'])
+                  loss='categorical_crossentropy', metrics=['accuracy'])
 
     print("shape of the model output = ", model.output_shape)
     model.fit(train_data, train_labels,
@@ -234,6 +226,6 @@ def train_top_model():
     print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

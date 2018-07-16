@@ -196,7 +196,7 @@ def train_top_model():
     # optimizer = sgd
     optimizer = adam
     model.compile(optimizer=optimizer,
-                  loss='categorical_crossentropy', metrics=['accuracy'])
+                  loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     print("shape of the model output = ", model.output_shape)
     model.fit(train_data, train_labels,

@@ -72,7 +72,8 @@ nb_val_2_samples = nb_val_2_samples - nb_val_2_samples % batch_size
 nb_val_3_samples = nb_val_3_samples - nb_val_3_samples % batch_size
 nb_val_4_samples = nb_val_4_samples - nb_val_4_samples % batch_size
 nb_val_5_samples = nb_val_5_samples - nb_val_5_samples % batch_size
-nb_validation_samples = nb_val_1_samples + nb_val_2_samples + nb_val_3_samples + nb_val_3_samples + nb_val_4_samples + nb_val_5_samples
+nb_validation_samples = nb_val_1_samples + nb_val_2_samples + nb_val_3_samples + nb_val_4_samples + nb_val_5_samples
+print("val samples are"+str(nb_validation_samples))
 
 nb_test_1 = get_filecount("mark_1/test/rate1")
 nb_test_2 = get_filecount("mark_1/test/rate2")
@@ -152,10 +153,10 @@ def train_top_model():
     validation_labels = np.array([-2] * int(nb_val_1_samples) + [-1] * int(nb_val_2_samples) + [0] * int(nb_val_3_samples) +[1] *
         int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
 
-    test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-    test_labels = np.array(
-        [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
-            nb_test_5))
+    # test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
+    # test_labels = np.array(
+    #     [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
+    #         nb_test_5))
 
     model = Sequential()
 
@@ -186,7 +187,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(5, activation='softmax'))
     print('3')
 
@@ -197,6 +198,10 @@ def train_top_model():
     optimizer = adam
     model.compile(optimizer=optimizer,
                   loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    print(len(train_data))
+    print(len(train_labels))
+    print(len(validation_data))
+    print(len(validation_labels))
 
     print("shape of the model output = ", model.output_shape)
     model.fit(train_data, train_labels,
@@ -207,25 +212,25 @@ def train_top_model():
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_two_adam2_with_conv2D.h5')
 
-    scores = model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=2,
-                            sample_weight=None,
-                            steps=None)
+    # scores = model.evaluate(test_data, test_labels,
+    #                         batch_size=batch_size,
+    #                         verbose=2,
+    #                         sample_weight=None,
+    #                         steps=None)
+    #
+    # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
+    # print("\n\n")
+    # print(scores1)
+    # print("\n\n")
+    # print(scores)
+    # print("\n\n")
+    # diff = scores - scores1
+    # print(diff)
+    # print("test_acc: ", "%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+    #
+    # print('4 : Done and Dusted')
 
-    scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
-    print("\n\n")
-    print(scores1)
-    print("\n\n")
-    print(scores)
-    print("\n\n")
-    diff = scores - scores1
-    print(diff)
-    print("test_acc: ", "%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
-    print('4 : Done and Dusted')
-
-
-#save_bottlebeck_features()
+save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

@@ -152,10 +152,10 @@ def train_top_model():
     validation_labels = np.array([-2] * int(nb_val_1_samples) + [-1] * int(nb_val_2_samples) + [0] * int(nb_val_3_samples) +[1] *
         int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
 
-    test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-    test_labels = np.array(
-        [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
-            nb_test_5))
+    # test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
+    # test_labels = np.array(
+    #     [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
+    #         nb_test_5))
 
     model = Sequential()
 
@@ -211,25 +211,25 @@ def train_top_model():
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_two_adam2_with_conv2D.h5')
 
-    scores = model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=2,
-                            sample_weight=None,
-                            steps=None)
+    # scores = model.evaluate(test_data, test_labels,
+    #                         batch_size=batch_size,
+    #                         verbose=2,
+    #                         sample_weight=None,
+    #                         steps=None)
+    #
+    # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
+    # print("\n\n")
+    # print(scores1)
+    # print("\n\n")
+    # print(scores)
+    # print("\n\n")
+    # diff = scores - scores1
+    # print(diff)
+    # print("test_acc: ", "%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+    #
+    # print('4 : Done and Dusted')
 
-    scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
-    print("\n\n")
-    print(scores1)
-    print("\n\n")
-    print(scores)
-    print("\n\n")
-    diff = scores - scores1
-    print(diff)
-    print("test_acc: ", "%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
-    print('4 : Done and Dusted')
-
-
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

@@ -186,7 +186,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(5, activation='softmax'))
     print('3')
 

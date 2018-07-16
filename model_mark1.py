@@ -73,6 +73,7 @@ nb_val_3_samples = nb_val_3_samples - nb_val_3_samples % batch_size
 nb_val_4_samples = nb_val_4_samples - nb_val_4_samples % batch_size
 nb_val_5_samples = nb_val_5_samples - nb_val_5_samples % batch_size
 nb_validation_samples = nb_val_1_samples + nb_val_2_samples + nb_val_3_samples + nb_val_3_samples + nb_val_4_samples + nb_val_5_samples
+print("val samples are"+nb_validation_samples)
 
 nb_test_1 = get_filecount("mark_1/test/rate1")
 nb_test_2 = get_filecount("mark_1/test/rate2")

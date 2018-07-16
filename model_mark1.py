@@ -183,7 +183,7 @@ def train_top_model():
 
     # Inception over
 
-    model.add(Flatten())
+    model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
     model.add(Dropout(0.6))

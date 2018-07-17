@@ -1,7 +1,7 @@
 import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
 from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, Concatenate
 from keras import initializers, regularizers, applications
 from keras.optimizers import Adam, SGD
@@ -160,7 +160,7 @@ def save_bottlebeck_features():
 
 
 def train_top_model():
-    print('training model...')
+    #print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
     train_labels = np.array([0] * int(nb_train_1_samples) + [1] * int(nb_train_2_samples) + [2] * int(nb_train_3_samples) + [3] * int(
             nb_train_4_samples) + [4] * int(nb_train_5_samples))
@@ -176,7 +176,7 @@ def train_top_model():
     train_labels = to_categorical(train_labels, 5)
     validation_labels = to_categorical(validation_labels, 5)
 #ass
-    model = Sequential()
+    #model = Sequential()
 
     # Inception Model
 
@@ -202,16 +202,16 @@ def train_top_model():
 
     # Inception over
 
-    model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-              activation='relu'))
-    model.add(Dropout(0.4))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-              activation='relu'))
-    model.add(Dropout(0.4))
-    model.add(Dense(5, activation='softmax'))
-    print('3')
-
+    # model.add(Flatten(input_shape=train_data.shape[1:]))
+    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    #           activation='relu'))
+    # model.add(Dropout(0.4))
+    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    #           activation='relu'))
+    # model.add(Dropout(0.4))
+    # model.add(Dense(5, activation='softmax'))
+    # print('3')
+    model = load_model('model_two_adam2_with_conv2D.h5')
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
@@ -231,7 +231,7 @@ def train_top_model():
               validation_data=(validation_data, validation_labels))
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-    model.save('model_two_adam2_with_conv2D.h5')
+    model.save('model_test2.h5')
 
     # scores = model.evaluate(test_data, test_labels,
     #                         batch_size=batch_size,

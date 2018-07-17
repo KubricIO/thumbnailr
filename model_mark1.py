@@ -42,7 +42,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 10
+epochs = 5
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -205,14 +205,14 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(5, activation='softmax'))
     print('3')
 
-    adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
     # optimizer = sgd

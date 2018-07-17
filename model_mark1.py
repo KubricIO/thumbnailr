@@ -5,6 +5,7 @@ from keras.models import Sequential, Model
 from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, Concatenate
 from keras import initializers, regularizers, applications
 from keras.optimizers import Adam, SGD
+from keras.utils import to_categorical
 import datetime
 import time
 import glob
@@ -161,18 +162,19 @@ def save_bottlebeck_features():
 def train_top_model():
     print('training model...')
     train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
-    train_labels = np.array(
-        [-2] * int(nb_train_1_samples) + [-1] * int(nb_train_2_samples) + [0] * int(nb_train_3_samples) + [1] * int(
-            nb_train_4_samples) + [2] * int(nb_train_5_samples))
+    train_labels = np.array([0] * int(nb_train_1_samples) + [1] * int(nb_train_2_samples) + [2] * int(nb_train_3_samples) + [3] * int(
+            nb_train_4_samples) + [4] * int(nb_train_5_samples))
 
     validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
-    validation_labels = np.array([-2] * int(nb_val_1_samples) + [-1] * int(nb_val_2_samples) + [0] * int(nb_val_3_samples) +[1] *
-        int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
+    validation_labels = np.array([0] * int(nb_val_1_samples) + [1] * int(nb_val_2_samples) + [2] * int(nb_val_3_samples) +[3] *
+        int(nb_val_4_samples)+ [4] * int(nb_val_5_samples))
 
     # test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
     # test_labels = np.array(
     #     [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
     #         nb_test_5))
+    train_labels = to_categorical(train_labels, 5)
+    validation_labels = to_categorical(validation_labels, 5)
 
     model = Sequential()
 
@@ -199,8 +201,11 @@ def train_top_model():
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
-
+    
     model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+              activation='relu'))
+    model.add(Dropout(0.5))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
     model.add(Dropout(0.5))
@@ -213,11 +218,11 @@ def train_top_model():
     # optimizer = sgd
     optimizer = adam
     model.compile(optimizer=optimizer,
-                  loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    print(len(train_data))
-    print(len(train_labels))
-    print(len(validation_data))
-    print(len(validation_labels))
+                  loss='categorical_crossentropy', metrics=['accuracy'])
+    # print(len(train_data))
+    # print(len(train_labels))
+    # print(len(validation_data))
+    # print(len(validation_labels))
 
     print("shape of the model output = ", model.output_shape)
     model.fit(train_data, train_labels,
@@ -247,6 +252,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

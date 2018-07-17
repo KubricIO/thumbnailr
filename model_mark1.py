@@ -213,7 +213,7 @@ def train_top_model():
     # model.add(Dense(5, activation='softmax'))
     # print('3')
     checkpointer = ModelCheckpoint(filepath='model_best.h5', verbose=1, save_best_only=True)
-
+    callbacks_list = [checkpointer]
     model = load_model('model_test2.h5')
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
@@ -232,7 +232,7 @@ def train_top_model():
               epochs=epochs,
               batch_size=batch_size,
               validation_data=(validation_data, validation_labels),
-              callbacks=checkpointer)
+              callbacks=callbacks_list)
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     #model.save('model_test2.h5')

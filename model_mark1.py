@@ -31,14 +31,14 @@ def get_filecount(path_to_directory):
         return 0
 
 
-def round_off(dirc, no_dp):
-    list_of_files = glob.glob(dirc + '/*')
-    latest_file = max(list_of_files, key=os.path.getctime)
-    print(latest_file)
-    for i in range(no_dp):
-        shutil.copy(latest_file, dirc + '/' + 'dub' + str(i + 1) + '.jpg')
-        i += 1
-    return
+# def round_off(dirc, no_dp):
+#     list_of_files = glob.glob(dirc + '/*')
+#     latest_file = max(list_of_files, key=os.path.getctime)
+#     print(latest_file)
+#     for i in range(no_dp):
+#         shutil.copy(latest_file, dirc + '/' + 'dub' + str(i + 1) + '.jpg')
+#         i += 1
+#     return
 
 
 epochs = 10
@@ -108,8 +108,12 @@ def save_bottlebeck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
+    print("Generating train bottleneck features")
+
     bottleneck_features_train = model.predict_generator(
         generator, nb_train_samples // batch_size)
+
+    print("saving train bottleneck features")
 
     np.save(open('bottleneck_features_train.npy', 'wb'),
             bottleneck_features_train)
@@ -122,8 +126,14 @@ def save_bottlebeck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
+
+    print("Generating validation bottleneck features")
+
     bottleneck_features_validation = model.predict_generator(
         generator, nb_validation_samples // batch_size)
+
+    print("Generating validation bottleneck features")
+
     np.save(open('bottleneck_features_validation.npy', 'wb'),
             bottleneck_features_validation)
     print("bottleneck features for the validation data has been stored")
@@ -135,8 +145,14 @@ def save_bottlebeck_features():
         batch_size=batch_size,
         class_mode=None,
         shuffle=False)
+
+    print("Generating test bottleneck features")
+
     bottleneck_features_test = model.predict_generator(
         generator, nb_test_samples // batch_size)
+
+    print("Generating test bottleneck features")
+
     np.save(open('bottleneck_features_test.npy', 'wb'),
             bottleneck_features_test)
     print("bottleneck features for the test data has been stored")
@@ -187,7 +203,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
-    model.add(Dropout(0.4))
+    model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))
     print('3')
 

@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks import ModelCheckpoint
 from keras.models import Sequential, Model, load_model
 from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, Concatenate
 from keras import initializers, regularizers, applications
@@ -211,7 +212,9 @@ def train_top_model():
     # model.add(Dropout(0.4))
     # model.add(Dense(5, activation='softmax'))
     # print('3')
-    model = load_model('model_two_adam2_with_conv2D.h5')
+    checkpointer = ModelCheckpoint(filepath='model_best.h5', verbose=1, save_best_only=True)
+
+    model = load_model('model_test2.h5')
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
@@ -228,10 +231,11 @@ def train_top_model():
     model.fit(train_data, train_labels,
               epochs=epochs,
               batch_size=batch_size,
-              validation_data=(validation_data, validation_labels))
+              validation_data=(validation_data, validation_labels),
+              callbacks=checkpointer)
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-    model.save('model_test2.h5')
+    #model.save('model_test2.h5')
 
     # scores = model.evaluate(test_data, test_labels,
     #                         batch_size=batch_size,

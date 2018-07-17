@@ -175,7 +175,7 @@ def train_top_model():
     #         nb_test_5))
     train_labels = to_categorical(train_labels, 5)
     validation_labels = to_categorical(validation_labels, 5)
-
+#ass
     model = Sequential()
 
     # Inception Model

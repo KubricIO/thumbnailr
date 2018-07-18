@@ -105,7 +105,6 @@ def myFunc(image):
 def save_bottlebeck_features():
     print('\n\nsaving bottleneck_features...')
     datagen = ImageDataGenerator(rescale=1. / 255,
-                                 preprocessing_function=myFunc,
                                  horizontal_flip=True)
 
     # build the VGG16 network

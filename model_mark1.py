@@ -46,7 +46,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 5
+epochs = 20
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -185,7 +185,7 @@ def train_top_model():
     train_labels = to_categorical(train_labels, 5)
     validation_labels = to_categorical(validation_labels, 5)
 
-    model = Sequential()
+    #model = Sequential()
 
     # Inception Model
 
@@ -211,15 +211,15 @@ def train_top_model():
 
     # Inception over
 
-    model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-               activation='relu'))
-    model.add(Dropout(0.4))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-               activation='relu'))
-    model.add(Dropout(0.4))
-    model.add(Dense(5, activation='softmax'))
-    print('3')
+    # model.add(Flatten(input_shape=train_data.shape[1:]))
+    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    #            activation='relu'))
+    # model.add(Dropout(0.4))
+    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    #            activation='relu'))
+    # model.add(Dropout(0.4))
+    # model.add(Dense(5, activation='softmax'))
+    # print('3')
     checkpointer = ModelCheckpoint(filepath='model_best_2.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
@@ -227,6 +227,7 @@ def train_top_model():
 
     # optimizer = sgd
     optimizer = adam
+    model=load_model('model_best_2.h5')
     model.compile(optimizer=optimizer,
                   loss='categorical_crossentropy', metrics=['accuracy'])
     # print(len(train_data))
@@ -263,6 +264,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

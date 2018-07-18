@@ -9,6 +9,9 @@ from keras.optimizers import Adam, SGD
 from keras.utils import to_categorical
 import datetime
 import time
+from PIL import Image
+import cv2
+
 import glob
 import shutil
 from keras import backend as K
@@ -94,10 +97,16 @@ nb_test_samples = nb_test_1 + nb_test_2 + nb_test_3 + nb_test_4 + nb_test_5
 seed = 7
 np.random.seed(seed)
 
+def myFunc(image):
+    image = np.array(image)
+    lab_image = cv2.cvtColor(image,cv2.COLOR_RGB2LAB)
+    return Image.fromarray(lab_image)
 
 def save_bottlebeck_features():
     print('\n\nsaving bottleneck_features...')
-    datagen = ImageDataGenerator(rescale=1. / 255)
+    datagen = ImageDataGenerator(rescale=1. / 255,
+                                 preprocessing_function=myFunc,
+                                 horizontal_flip=True)
 
     # build the VGG16 network
     model = applications.VGG16(include_top=False, weights='imagenet', classes=5)
@@ -170,14 +179,14 @@ def train_top_model():
     validation_labels = np.array([0] * int(nb_val_1_samples) + [1] * int(nb_val_2_samples) + [2] * int(nb_val_3_samples) +[3] *
         int(nb_val_4_samples)+ [4] * int(nb_val_5_samples))
 
-    # test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-    # test_labels = np.array(
-    #     [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
-    #         nb_test_5))
+#     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
+#     test_labels = np.array(
+#          [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
+#              nb_test_5))
     train_labels = to_categorical(train_labels, 5)
     validation_labels = to_categorical(validation_labels, 5)
-#ass
-    #model = Sequential()
+
+    model = Sequential()
 
     # Inception Model
 
@@ -203,18 +212,17 @@ def train_top_model():
 
     # Inception over
 
-    # model.add(Flatten(input_shape=train_data.shape[1:]))
-    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-    #           activation='relu'))
-    # model.add(Dropout(0.4))
-    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-    #           activation='relu'))
-    # model.add(Dropout(0.4))
-    # model.add(Dense(5, activation='softmax'))
-    # print('3')
-    checkpointer = ModelCheckpoint(filepath='model_best.h5', verbose=1, save_best_only=True)
+    model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+               activation='relu'))
+    model.add(Dropout(0.4))
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+               activation='relu'))
+    model.add(Dropout(0.4))
+    model.add(Dense(5, activation='softmax'))
+    print('3')
+    checkpointer = ModelCheckpoint(filepath='model_best_2.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
-    model = load_model('model_test2.h5')
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
@@ -256,6 +264,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-#save_bottlebeck_features()
+save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

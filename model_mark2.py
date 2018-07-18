@@ -146,21 +146,21 @@ validation_generator = test_datagen.flow_from_directory(
 
 model = Sequential()
 
-model.add(Conv2D(64, (2, 2), padding='same', activation = 'relu', input_shape=(150,150,3)))
+model.add(Conv2D(128, (3, 3), padding='same', activation = 'relu', input_shape=(150,150,3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(128, (2, 2), padding='same', activation = 'relu'))
+model.add(Conv2D(256, (3, 3), padding='same', activation = 'relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(256, (2, 2), padding='same', activation = 'relu'))
+model.add(Conv2D(256, (3, 3), padding='same', activation = 'relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(256, (2, 2), padding='same', activation = 'relu'))
+model.add(Conv2D(512, (3, 3), padding='same', activation = 'relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Flatten())
-model.add(Dense(512, activation = 'relu'))
-model.add(Dropout(0.3))
+model.add(Dense(1024, activation = 'relu'))
+model.add(Dropout(0.4))
 model.add(Dense(5, activation = 'softmax'))
 
 
@@ -180,6 +180,8 @@ model.compile(optimizer=optimizer,
 
 
 # In[59]:
+checkpointer = ModelCheckpoint(filepath='model_best3.h5', verbose=1, save_best_only=True)
+callbacks_list = [checkpointer]
 
 
 
@@ -196,5 +198,7 @@ model.compile(optimizer=optimizer,
 model.fit_generator(
     train_generator,
     epochs=5,
+    steps_per_epoch=96,
+    callbacks=callbacks_list,
     validation_data=validation_generator)
 

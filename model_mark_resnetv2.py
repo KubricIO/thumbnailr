@@ -46,7 +46,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 20
+epochs = 10
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")

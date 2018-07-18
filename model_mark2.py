@@ -197,7 +197,7 @@ callbacks_list = [checkpointer]
 
 model.fit_generator(
     train_generator,
-    epochs=5,
+    epochs=40,
     steps_per_epoch=96,
     callbacks=callbacks_list,
     validation_data=validation_generator)

@@ -212,9 +212,12 @@ def train_top_model():
     # Inception over
     print(model.summary())
     model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Dense(2048, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+              activation='relu'))
+    model.add(Dropout(0.4))
     model.add(Dense(3, activation='softmax'))
     print('3')
-    checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense0.h5', verbose=1, save_best_only=True)
+    checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_2048.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)

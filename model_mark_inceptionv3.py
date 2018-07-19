@@ -213,10 +213,7 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
         activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-               activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(3, activation='softmax'))
     print('3')
     checkpointer = ModelCheckpoint(filepath='model_class3_vgg16.h5', verbose=1, save_best_only=True)

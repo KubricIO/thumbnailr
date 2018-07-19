@@ -44,7 +44,7 @@ def round_off(dirc, no_dp,no_files):
         shutil.copyfile(latest_file, dirc + '/' + str(no_files + i + 1) + '.jpg')
 
 
-epochs = 10
+epochs = 30
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -211,15 +211,16 @@ def train_top_model():
     # Inception over
 
     model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(2048, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
         activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(2048, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
                activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(3, activation='softmax'))
     print('3')
-
+    checkpointer = ModelCheckpoint(filepath='model_class3_vgg16.h5', verbose=1, save_best_only=True)
+    callbacks_list = [checkpointer]
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
 
@@ -237,7 +238,8 @@ def train_top_model():
     model.fit(train_data, train_labels,
               epochs=epochs,
               batch_size=batch_size,
-              validation_data=(validation_data, validation_labels))
+              validation_data=(validation_data, validation_labels),
+              callbacks=callbacks_list)
     # model.save_weights(top_model_weights_path)
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     #model.save('model_test2.h5')

@@ -125,7 +125,7 @@ def save_bottlebeck_features():
 
     print("saving train bottleneck features")
 
-    np.save(open('bottleneck_features_train.npy', 'wb'),
+    np.save(open('bottleneck_features_train_vgg16.npy', 'wb'),
             bottleneck_features_train)
     print("bottleneck features for the training data has been stored")
 
@@ -144,7 +144,7 @@ def save_bottlebeck_features():
 
     print("Generating validation bottleneck features")
 
-    np.save(open('bottleneck_features_validation.npy', 'wb'),
+    np.save(open('bottleneck_features_validation_vgg16.npy', 'wb'),
             bottleneck_features_validation)
     print("bottleneck features for the validation data has been stored")
 
@@ -163,18 +163,18 @@ def save_bottlebeck_features():
 
     print("Generating test bottleneck features")
 
-    np.save(open('bottleneck_features_test.npy', 'wb'),
+    np.save(open('bottleneck_features_test_vgg16.npy', 'wb'),
             bottleneck_features_test)
     print("bottleneck features for the test data has been stored")
 
 
 def train_top_model():
     #print('training model...')
-    train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
+    train_data = np.load(open('bottleneck_features_train_vgg16.npy', 'rb'))
     train_labels = np.array([0] * int(nb_train_1_samples) + [0] * int(nb_train_2_samples) + [1] * int(nb_train_3_samples) + [2] * int(
             nb_train_4_samples) + [2] * int(nb_train_5_samples))
 
-    validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
+    validation_data = np.load(open('bottleneck_features_validation_vgg16.npy', 'rb'))
     validation_labels = np.array([0] * int(nb_val_1_samples) + [0] * int(nb_val_2_samples) + [1] * int(nb_val_3_samples) +[2] *
         int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
 

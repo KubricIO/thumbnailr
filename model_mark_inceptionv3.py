@@ -216,7 +216,7 @@ def train_top_model():
     model.add(Dropout(0.4))
     model.add(Dense(3, activation='softmax'))
     print('3')
-    checkpointer = ModelCheckpoint(filepath='model_class3_vgg16.h5', verbose=1, save_best_only=True)
+    checkpointer = ModelCheckpoint(filepath='model_class3_inception_dense1.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)

@@ -210,14 +210,11 @@ def train_top_model():
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
-
+    print(model.summary())
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-        activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
                activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.4))
     model.add(Dense(3, activation='softmax'))
     print('3')
     checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2.h5', verbose=1, save_best_only=True)
@@ -264,6 +261,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

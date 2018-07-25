@@ -167,7 +167,7 @@ def train_top_model():
     #validation_labels = to_categorical(validation_labels, 3)
     test_labels = to_categorical(test_labels, 3)
 
-
+    cvscores=[]
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         model = Sequential()
@@ -218,17 +218,13 @@ def train_top_model():
         train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
               epochs=epochs,
-              batch_size=batch_size,
-              validation_data=(train_data[test], train_labels[test]))
+              batch_size=batch_size)
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         #model.save('model_test2.h5')
-    model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=2,
-                            sample_weight=None,
-                            steps=None)
-
+        scores = model.evaluate(train_data[test], train_labels[test], verbose=0)
+        print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+        cvscores.append(scores[1] * 100)
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
     # print("\n\n")

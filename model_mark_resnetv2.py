@@ -46,7 +46,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 2
+epochs = 1
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -219,8 +219,7 @@ def train_top_model():
         model.fit(train_data[train], train_labels[train],
               epochs=epochs,
               batch_size=batch_size,
-              validation_data=(train_data[test], train_labels[test]),
-              callbacks=callbacks_list)
+              validation_data=(train_data[test], train_labels[test]),callbacks=callbacks_list)
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         #model.save('model_test2.h5')

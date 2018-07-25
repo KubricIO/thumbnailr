@@ -163,7 +163,7 @@ def train_top_model():
 
     test_data = np.load(open('bottleneck_features_test_3class_resnet_kf.npy', 'rb'))
     test_labels = np.array([0] * int(nb_test_1) + [1] * int(nb_test_2) + [2] * int(nb_test_3))
-    train_labels = to_categorical(train_labels, 3)
+    #train_labels = to_categorical(train_labels, 3)
     #validation_labels = to_categorical(validation_labels, 3)
     test_labels = to_categorical(test_labels, 3)
 
@@ -215,6 +215,7 @@ def train_top_model():
         # print(len(validation_labels))
 
         print("shape of the model output = ", model.output_shape)
+        train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
               epochs=epochs,
               batch_size=batch_size,
@@ -243,6 +244,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

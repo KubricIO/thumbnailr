@@ -223,7 +223,7 @@ def train_top_model():
               epochs=epochs,
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),
-              checkpointer=callbacks_list)
+              callbacks=callbacks_list)
         i+=1
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())

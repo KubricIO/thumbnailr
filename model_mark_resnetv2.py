@@ -165,10 +165,10 @@ def train_top_model():
     test_labels = np.array([0] * int(nb_test_1) + [1] * int(nb_test_2) + [2] * int(nb_test_3))
     #train_labels = to_categorical(train_labels, 3)
     #validation_labels = to_categorical(validation_labels, 3)
-    test_labels = to_categorical(test_labels, 3)
+    #test_labels = to_categorical(test_labels, 3)
 
 
-    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=1, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
@@ -225,11 +225,12 @@ def train_top_model():
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         #model.save('model_test2.h5')
-    model.evaluate(test_data, test_labels,
+    scores = model.evaluate(test_data, test_labels,
                             batch_size=batch_size,
                             verbose=2,
                             sample_weight=None,
                             steps=None)
+    print(scores)
 
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)

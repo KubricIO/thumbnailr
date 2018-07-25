@@ -25,6 +25,26 @@ top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './mark_1/train'
 validation_data_dir = './mark_1/val'
 test_data_dir = './mark_1/test'
+def get_confusion_matrix(model_name,test_data,test_labels):
+    model=load_model(model_name)
+    predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
+    print(predictions)
+    scores1 = []
+    predictions = np.array(predictions)
+    for i in range(len(predictions)):
+        scores1.append(np.argmax(predictions[i]))
+    print(scores1)
+    c = confusion_matrix(test_labels, scores1)
+    print(c)
+    f = open(model_name+'.txt', "w+")
+    f.write(c)
+    scores = model.evaluate(test_data, test_labels,
+                            batch_size=batch_size,
+                            verbose=2,
+                            sample_weight=None,
+                            steps=None)
+    print(scores)
+    f.write(scores)
 
 
 def get_filecount(path_to_directory):
@@ -177,7 +197,7 @@ def train_top_model():
     # model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
 
     i=1
-    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
@@ -228,24 +248,11 @@ def train_top_model():
               validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)
         i+=1
+        get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels)
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_final.h5')
-    predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
-    print(predictions)
-    scores1 = []
-    predictions = np.array(predictions)
-    for i in range(len(predictions)):
-        scores1.append(np.argmax(predictions[i]))
-    print(scores1)
-    c = confusion_matrix(test_labels,scores1)
-    print(c)
-    scores = model.evaluate(test_data, test_labels,
-                            batch_size=batch_size,
-                            verbose=2,
-                            sample_weight=None,
-                            steps=None)
-    print(scores)
+    get_confusion_matrix('model_final.h5', test_data, test_labels)
 
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)

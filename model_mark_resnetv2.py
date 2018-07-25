@@ -168,7 +168,7 @@ def train_top_model():
     #validation_labels = to_categorical(validation_labels, 3)
     #test_labels = to_categorical(test_labels, 3)
 
-
+    i=1
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
@@ -203,7 +203,7 @@ def train_top_model():
         model.add(Dropout(0.4))
         model.add(Dense(3, activation='softmax'))
         print('3')
-        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf.h5', verbose=1, save_best_only=True)
+        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf'+str(i)+'.h5', verbose=1, save_best_only=True)
         callbacks_list = [checkpointer]
         adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
         sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
@@ -222,11 +222,12 @@ def train_top_model():
         model.fit(train_data[train], train_labels[train],
               epochs=epochs,
               batch_size=batch_size,
-              validation_data=(train_data[test], train_labels[test]))
-        
+              validation_data=(train_data[test], train_labels[test]),
+              checkpointer=callbacks_list)
+        i+=1
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        #model.save('model_test2.h5')
+    model.save('model_final.h5')
     predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
     print(predictions)
     scores1 = []

@@ -47,7 +47,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 1
+epochs = 20
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -169,7 +169,7 @@ def train_top_model():
     #test_labels = to_categorical(test_labels, 3)
 
 
-    kfold = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
@@ -203,8 +203,8 @@ def train_top_model():
         model.add(Dropout(0.4))
         model.add(Dense(3, activation='softmax'))
         print('3')
-        # checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf.h5', verbose=1, save_best_only=True)
-        # callbacks_list = [checkpointer]
+        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf.h5', verbose=1, save_best_only=True)
+        callbacks_list = [checkpointer]
         adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
         sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
         # optimizer = sgd
@@ -223,6 +223,7 @@ def train_top_model():
               epochs=epochs,
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]))
+        
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         #model.save('model_test2.h5')

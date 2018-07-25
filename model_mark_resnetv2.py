@@ -247,8 +247,8 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)
-        i+=1
         get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels)
+        i += 1
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_final.h5')

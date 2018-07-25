@@ -45,7 +45,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 30
+epochs = 10
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -240,6 +240,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-save_bottlebeck_features()
+#save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

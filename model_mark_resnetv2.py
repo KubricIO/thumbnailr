@@ -168,7 +168,7 @@ def train_top_model():
     #test_labels = to_categorical(test_labels, 3)
 
 
-    kfold = StratifiedKFold(n_splits=1, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)

@@ -232,8 +232,9 @@ def train_top_model():
     predictions = np.array(predictions)
     for i in range(len(predictions)):
         scores1.append(np.argmax(predictions[i]))
-    confusion_matrix(test_labels,scores1)
-
+    print(scores1)
+    c = confusion_matrix(test_labels,scores1)
+    print(c)
     scores = model.evaluate(test_data, test_labels,
                             batch_size=batch_size,
                             verbose=2,

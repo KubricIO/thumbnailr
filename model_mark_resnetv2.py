@@ -210,14 +210,14 @@ def train_top_model():
         optimizer = adam
         #model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
         model.compile(optimizer=optimizer,
-                      loss='categorical_crossentropy', metrics=['accuracy'])
+                      loss='sparse_categorical_crossentropy', metrics=['accuracy'])
         # print(len(train_data))
         # print(len(train_labels))
         # print(len(validation_data))
         # print(len(validation_labels))
 
         print("shape of the model output = ", model.output_shape)
-        train_labels = to_categorical(train_labels, 3)
+        # train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
               epochs=epochs,
               batch_size=batch_size,

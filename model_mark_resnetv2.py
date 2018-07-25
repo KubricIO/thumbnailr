@@ -165,7 +165,7 @@ def train_top_model():
     train_labels = to_categorical(train_labels, 3)
     validation_labels = to_categorical(validation_labels, 3)
     test_labels = to_categorical(test_labels, 3)
-    model = Sequential()
+    #model = Sequential()
 
     # Inception Model
 
@@ -190,22 +190,22 @@ def train_top_model():
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
-    model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-              activation='relu'))
-    model.add(Dropout(0.4))
-    model.add(Dense(3, activation='softmax'))
-    print('3')
+    # model.add(Flatten(input_shape=train_data.shape[1:]))
+    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    #           activation='relu'))
+    # model.add(Dropout(0.4))
+    # model.add(Dense(3, activation='softmax'))
+    # print('3')
     checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
-    adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-    sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
-
-    # optimizer = sgd
-    optimizer = adam
-    #model=load_model('model_3class_1.h5')
-    model.compile(optimizer=optimizer,
-                  loss='categorical_crossentropy', metrics=['accuracy'])
+    # adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    # sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
+    #
+    # # optimizer = sgd
+    # optimizer = adam
+    model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
+    # model.compile(optimizer=optimizer,
+    #               loss='categorical_crossentropy', metrics=['accuracy'])
     # print(len(train_data))
     # print(len(train_labels))
     # print(len(validation_data))
@@ -221,7 +221,7 @@ def train_top_model():
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     #model.save('model_test2.h5')
 
-    scores = model.evaluate(test_data, test_labels,
+    model.evaluate(test_data, test_labels,
                              batch_size=batch_size,
                              verbose=2,
                              sample_weight=None,

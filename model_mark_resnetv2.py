@@ -11,7 +11,6 @@ import datetime
 import time
 from PIL import Image
 import cv2
-
 import glob
 import shutil
 from keras import backend as K
@@ -52,46 +51,31 @@ batch_size = 8
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
 nb_train_2_samples = get_filecount("mark_1/train/rate2")
 nb_train_3_samples = get_filecount("mark_1/train/rate3")
-nb_train_4_samples = get_filecount("mark_1/train/rate4")
-nb_train_5_samples = get_filecount("mark_1/train/rate5")
-
-# nb_train_samples = 3472
 
 nb_train_1_samples = nb_train_1_samples - nb_train_1_samples % batch_size
 nb_train_2_samples = nb_train_2_samples - nb_train_2_samples % batch_size
 nb_train_3_samples = nb_train_3_samples - nb_train_3_samples % batch_size
-nb_train_4_samples = nb_train_4_samples - nb_train_4_samples % batch_size
-nb_train_5_samples = nb_train_5_samples - nb_train_5_samples % batch_size
-nb_train_samples = nb_train_1_samples + nb_train_2_samples + nb_train_3_samples + nb_train_4_samples + nb_train_5_samples
+nb_train_samples = nb_train_1_samples + nb_train_2_samples + nb_train_3_samples
+
 
 nb_val_1_samples = get_filecount("mark_1/val/rate1")
 nb_val_2_samples = get_filecount("mark_1/val/rate2")
 nb_val_3_samples = get_filecount("mark_1/val/rate3")
-nb_val_4_samples = get_filecount("mark_1/val/rate4")
-nb_val_5_samples = get_filecount("mark_1/val/rate5")
-
-# nb_validation_samples =740
 
 nb_val_1_samples = nb_val_1_samples - nb_val_1_samples % batch_size
 nb_val_2_samples = nb_val_2_samples - nb_val_2_samples % batch_size
 nb_val_3_samples = nb_val_3_samples - nb_val_3_samples % batch_size
-nb_val_4_samples = nb_val_4_samples - nb_val_4_samples % batch_size
-nb_val_5_samples = nb_val_5_samples - nb_val_5_samples % batch_size
-nb_validation_samples = nb_val_1_samples + nb_val_2_samples + nb_val_3_samples + nb_val_4_samples + nb_val_5_samples
-print("val samples are"+str(nb_validation_samples))
+nb_validation_samples = nb_val_1_samples + nb_val_2_samples + nb_val_3_samples
+
 
 nb_test_1 = get_filecount("mark_1/test/rate1")
 nb_test_2 = get_filecount("mark_1/test/rate2")
 nb_test_3 = get_filecount("mark_1/test/rate3")
-nb_test_4 = get_filecount("mark_1/test/rate4")
-nb_test_5 = get_filecount("mark_1/test/rate5")
 
 nb_test_1 = nb_test_1 - nb_test_1 % batch_size
 nb_test_2 = nb_test_2 - nb_test_2 % batch_size
 nb_test_3 = nb_test_3 - nb_test_3 % batch_size
-nb_test_4 = nb_test_4 - nb_test_4 % batch_size
-nb_test_5 = nb_test_5 - nb_test_5 % batch_size
-nb_test_samples = nb_test_1 + nb_test_2 + nb_test_3 + nb_test_4 + nb_test_5
+nb_test_samples = nb_test_1 + nb_test_2 + nb_test_3
 
 # fix random seed for reproducibility
 seed = 7
@@ -125,7 +109,7 @@ def save_bottlebeck_features():
 
     print("saving train bottleneck features")
 
-    np.save(open('bottleneck_features_train.npy', 'wb'),
+    np.save(open('bottleneck_features_train_3class_resnet.npy', 'wb'),
             bottleneck_features_train)
     print("bottleneck features for the training data has been stored")
 
@@ -144,7 +128,7 @@ def save_bottlebeck_features():
 
     print("Generating validation bottleneck features")
 
-    np.save(open('bottleneck_features_validation.npy', 'wb'),
+    np.save(open('bottleneck_features_validation_3class_resnet.npy', 'wb'),
             bottleneck_features_validation)
     print("bottleneck features for the validation data has been stored")
 
@@ -163,28 +147,24 @@ def save_bottlebeck_features():
 
     print("Generating test bottleneck features")
 
-    np.save(open('bottleneck_features_test.npy', 'wb'),
+    np.save(open('bottleneck_features_test_3class_resnet.npy', 'wb'),
             bottleneck_features_test)
     print("bottleneck features for the test data has been stored")
 
 
 def train_top_model():
     #print('training model...')
-    train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
-    train_labels = np.array([0] * int(nb_train_1_samples) + [0] * int(nb_train_2_samples) + [1] * int(nb_train_3_samples) + [2] * int(
-            nb_train_4_samples) + [2] * int(nb_train_5_samples))
+    train_data = np.load(open('bottleneck_features_train_3class_resnet.npy', 'rb'))
+    train_labels = np.array([0] * int(nb_train_1_samples) + [1] * int(nb_train_2_samples) + [2] * int(nb_train_3_samples))
 
-    validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
-    validation_labels = np.array([0] * int(nb_val_1_samples) + [0] * int(nb_val_2_samples) + [1] * int(nb_val_3_samples) +[2] *
-        int(nb_val_4_samples)+ [2] * int(nb_val_5_samples))
+    validation_data = np.load(open('bottleneck_features_validation_3class_resnet.npy', 'rb'))
+    validation_labels = np.array([0] * int(nb_val_1_samples) + [1] * int(nb_val_2_samples) + [2] * int(nb_val_3_samples))
 
-#     test_data = np.load(open('bottleneck_features_test.npy', 'rb'))
-#     test_labels = np.array(
-#          [-2] * int(nb_test_1) + [-1] * int(nb_test_2) + [0] * int(nb_test_3) + [1] * int(nb_test_4) + [2] * int(
-#              nb_test_5))
+    test_data = np.load(open('bottleneck_features_test_3class_resnet.npy', 'rb'))
+    test_labels = np.array([0] * int(nb_test_1) + [1] * int(nb_test_2) + [2] * int(nb_test_3))
     train_labels = to_categorical(train_labels, 3)
     validation_labels = to_categorical(validation_labels, 3)
-
+    test_labels = to_categorical(test_labels, 3)
     model = Sequential()
 
     # Inception Model
@@ -210,14 +190,13 @@ def train_top_model():
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
-    print(model.summary())
     model.add(Flatten(input_shape=train_data.shape[1:]))
-    model.add(Dense(2048, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
               activation='relu'))
     model.add(Dropout(0.4))
     model.add(Dense(3, activation='softmax'))
     print('3')
-    checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_2048.h5', verbose=1, save_best_only=True)
+    checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2.h5', verbose=1, save_best_only=True)
     callbacks_list = [checkpointer]
     adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
@@ -242,11 +221,11 @@ def train_top_model():
     name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     #model.save('model_test2.h5')
 
-    # scores = model.evaluate(test_data, test_labels,
-    #                         batch_size=batch_size,
-    #                         verbose=2,
-    #                         sample_weight=None,
-    #                         steps=None)
+    scores = model.evaluate(test_data, test_labels,
+                             batch_size=batch_size,
+                             verbose=2,
+                             sample_weight=None,
+                             steps=None)
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
     # print("\n\n")
@@ -261,6 +240,6 @@ def train_top_model():
     # print('4 : Done and Dusted')
 
 
-#save_bottlebeck_features()
+save_bottlebeck_features()
 train_top_model()
 print("\n\ntime taken =", time.clock() - start)

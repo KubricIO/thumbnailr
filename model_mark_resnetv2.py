@@ -46,7 +46,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 10
+epochs = 3
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -167,9 +167,9 @@ def train_top_model():
     #validation_labels = to_categorical(validation_labels, 3)
     test_labels = to_categorical(test_labels, 3)
 
-
+    tr_labels=train_labels
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
-    for train, test in kfold.split(train_data, train_labels):
+    for train, test in kfold.split(train_data, tr_labels):
         model = Sequential()
         # Inception Model
 

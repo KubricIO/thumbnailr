@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import StratifiedKFold
 from keras.callbacks import ModelCheckpoint
 from keras.models import Sequential, Model, load_model
 from keras.layers import Dropout, Flatten, Dense, Conv2D, MaxPooling2D, Concatenate
@@ -165,8 +166,12 @@ def train_top_model():
     train_labels = to_categorical(train_labels, 3)
     validation_labels = to_categorical(validation_labels, 3)
     test_labels = to_categorical(test_labels, 3)
-    #model = Sequential()
 
+
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    cvscores = []
+    for train, test in kfold.split(train_data, train_labels):
+        model = Sequential()
     # Inception Model
 
     # Block1 = Sequential()
@@ -190,42 +195,37 @@ def train_top_model():
     # model.add(merged ,input_shape=train_data.shape[1:])
 
     # Inception over
-    # model.add(Flatten(input_shape=train_data.shape[1:]))
-    # model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-    #           activation='relu'))
-    # model.add(Dropout(0.4))
-    # model.add(Dense(3, activation='softmax'))
-    # print('3')
-    checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2.h5', verbose=1, save_best_only=True)
-    callbacks_list = [checkpointer]
-    # adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-    # sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
-    #
-    # # optimizer = sgd
-    # optimizer = adam
-    model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
-    # model.compile(optimizer=optimizer,
-    #               loss='categorical_crossentropy', metrics=['accuracy'])
+        model.add(Flatten(input_shape=train_data.shape[1:]))
+        model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+                  activation='relu'))
+        model.add(Dropout(0.4))
+        model.add(Dense(3, activation='softmax'))
+        print('3')
+        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf.h5', verbose=1, save_best_only=True)
+        callbacks_list = [checkpointer]
+        adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+        sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
+        # optimizer = sgd
+        optimizer = adam
+        #model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
+        model.compile(optimizer=optimizer,
+                      loss='categorical_crossentropy', metrics=['accuracy'])
     # print(len(train_data))
     # print(len(train_labels))
     # print(len(validation_data))
     # print(len(validation_labels))
 
-    print("shape of the model output = ", model.output_shape)
-    model.fit(train_data, train_labels,
+        print("shape of the model output = ", model.output_shape)
+        model.fit(train_data[train], train_labels[train],
               epochs=epochs,
               batch_size=batch_size,
-              validation_data=(validation_data, validation_labels),
+              validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)
     # model.save_weights(top_model_weights_path)
-    name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     #model.save('model_test2.h5')
 
-    model.evaluate(test_data, test_labels,
-                             batch_size=batch_size,
-                             verbose=2,
-                             sample_weight=None,
-                             steps=None)
+
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)
     # print("\n\n")

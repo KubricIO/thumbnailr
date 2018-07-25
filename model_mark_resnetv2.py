@@ -37,14 +37,14 @@ def get_confusion_matrix(model_name,test_data,test_labels):
     c = confusion_matrix(test_labels, scores1)
     print(c)
     f = open(model_name+'.txt', "w+")
-    f.write(c)
+    f.write(str(c))
     scores = model.evaluate(test_data, test_labels,
                             batch_size=batch_size,
                             verbose=2,
                             sample_weight=None,
                             steps=None)
     print(scores)
-    f.write(scores)
+    f.write(str(scores))
 
 
 def get_filecount(path_to_directory):

@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from keras.preprocessing.image import ImageDataGenerator
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import StratifiedKFold
 from keras.callbacks import ModelCheckpoint
 from keras.models import Sequential, Model, load_model
@@ -225,6 +226,14 @@ def train_top_model():
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         #model.save('model_test2.h5')
+    predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
+    print(predictions)
+    scores1 = []
+    predictions = np.array(predictions)
+    for i in range(len(predictions)):
+        scores1.append(np.argmax(predictions[i]))
+    confusion_matrix(test_labels,scores1)
+
     scores = model.evaluate(test_data, test_labels,
                             batch_size=batch_size,
                             verbose=2,

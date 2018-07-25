@@ -47,7 +47,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 20
+epochs = 2
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -167,13 +167,21 @@ def train_top_model():
     #train_labels = to_categorical(train_labels, 3)
     #validation_labels = to_categorical(validation_labels, 3)
     #test_labels = to_categorical(test_labels, 3)
+    model = Sequential()
+    model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
+              activation='relu'))
+    model.add(Dropout(0.4))
+    model.add(Dense(3, activation='softmax'))
+
+    # model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
 
     i=1
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
-        model = Sequential()
+
         # Inception Model
 
         # Block1 = Sequential()
@@ -197,30 +205,25 @@ def train_top_model():
         # model.add(merged ,input_shape=train_data.shape[1:])
 
         # Inception over
-        model.add(Flatten(input_shape=train_data.shape[1:]))
-        model.add(Dense(4096, kernel_initializer=initializers.glorot_uniform(seed=None), kernel_regularizer=regularizers.l2(0.01),
-                  activation='relu'))
-        model.add(Dropout(0.4))
-        model.add(Dense(3, activation='softmax'))
+
+        # print(len(train_data))
+        # print(len(train_labels))
+        # print(len(validation_data))
+        # print(len(validation_labels))
         print('3')
-        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf'+str(i)+'.h5', verbose=1, save_best_only=True)
+        checkpointer = ModelCheckpoint(filepath='model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5', verbose=1,
+                                       save_best_only=True)
         callbacks_list = [checkpointer]
         adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
         sgd = SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
         # optimizer = sgd
         optimizer = adam
-        #model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
         model.compile(optimizer=optimizer,
                       loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-        # print(len(train_data))
-        # print(len(train_labels))
-        # print(len(validation_data))
-        # print(len(validation_labels))
-
         print("shape of the model output = ", model.output_shape)
         # train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
-              epochs=epochs,
+              epochs=2,
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)

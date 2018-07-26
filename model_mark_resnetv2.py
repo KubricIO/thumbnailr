@@ -63,10 +63,9 @@ def get_confusion_matrix(model_name,test_data,test_labels,i):
     plt.title('Class wise Predicted Images | acc :' + str(acc)+'%')
     plt.xticks(ind, ('Pred_class1', 'Pred_class2', 'Pred_class3'))
     plt.legend((p1, p2, p3), ('Class1', 'Class2', 'Class3'))
-
-    plt.show()
     plt.savefig(model_name+'.jpg')
-
+    plt.cla()
+    plt.clf()
 
 def get_filecount(path_to_directory):
     if os.path.exists(path_to_directory):
@@ -118,7 +117,7 @@ nb_test_3 = get_filecount("mark_1/test/rate3")
 nb_test_1 = nb_test_1 - nb_test_1 % batch_size
 nb_test_2 = nb_test_2 - nb_test_2 % batch_size
 nb_test_3 = nb_test_3 - nb_test_3 % batch_size
-nb_test_samples = nb_test_1 + nb_test_2 + nb_test_3
+nb_test_samples    = nb_test_1 + nb_test_2 + nb_test_3
 
 # fix random seed for reproducibility
 seed = 7

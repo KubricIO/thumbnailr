@@ -28,7 +28,7 @@ top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './mark_1/train'
 validation_data_dir = './mark_1/val'
 test_data_dir = './mark_1/test'
-def get_confusion_matrix(model_name,test_data,test_labels,i):
+def get_confusion_matrix(model_name,test_data,test_labels):
     model=load_model(model_name)
     predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
     print(predictions)
@@ -87,7 +87,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 2
+epochs = 20
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_1/train/rate1")
@@ -217,7 +217,7 @@ def train_top_model():
     # model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
 
     i=1
-    kfold = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
@@ -263,16 +263,16 @@ def train_top_model():
         print("shape of the model output = ", model.output_shape)
         # train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
-              epochs=2,
+              epochs=epochs,
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)
-        get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels,i)
+        get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels)
         i += 1
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_final.h5')
-    get_confusion_matrix('model_final.h5', test_data, test_labels,i)
+    get_confusion_matrix('model_final.h5', test_data, test_labels)
 
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)

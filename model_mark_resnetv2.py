@@ -16,7 +16,7 @@ import cv2
 import glob
 import shutil
 from keras import backend as K
-
+import matplotlib.pyplot as plt
 # dimensions of our images.
 img_width, img_height = 150, 150
 start = time.clock()
@@ -25,7 +25,7 @@ top_model_weights_path = 'bottleneck_fc_model.h5'
 train_data_dir = './mark_1/train'
 validation_data_dir = './mark_1/val'
 test_data_dir = './mark_1/test'
-def get_confusion_matrix(model_name,test_data,test_labels):
+def get_confusion_matrix(model_name,test_data,test_labels,i):
     model=load_model(model_name)
     predictions = model.predict(test_data, batch_size=batch_size, verbose=2)
     print(predictions)
@@ -45,6 +45,24 @@ def get_confusion_matrix(model_name,test_data,test_labels):
                             steps=None)
     print(scores)
     f.write(str(scores))
+
+    N = 3
+    class1 = (c[0][0],c[0][1],c[0][2])
+    class2 = (c[1][0], c[1][1], c[1][2])
+    class3 = (c[2][0], c[2][1], c[2][2])
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.35  # the width of the bars: can also be len(x) sequence
+    acc = scores[1]*100
+    p1 = plt.bar(ind, class1, width, yerr=None)
+    p2 = plt.bar(ind, class2, width, bottom=class1, yerr=None)
+    p3 = plt.bar(ind, class3, width, bottom=[i + j for i, j in zip(class1, class2)], yerr=None)
+    plt.ylabel('Image count')
+    plt.title('Class wise Predicted Images | acc :' + str(acc)+'%')
+    plt.xticks(ind, ('Pred_class1', 'Pred_class2', 'Pred_class3'))
+    plt.legend((p1, p2, p3), ('Class1', 'Class2', 'Class3'))
+
+    # plt.show()
+    plt.savefig('figure'+ str(i) +'.jpg')
 
 
 def get_filecount(path_to_directory):
@@ -247,12 +265,12 @@ def train_top_model():
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),
               callbacks=callbacks_list)
-        get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels)
+        get_confusion_matrix('model_class3_resnetv2_dense1_4096_2_kf' + str(i) + '.h5',test_data,test_labels,i)
         i += 1
         # model.save_weights(top_model_weights_path)
             #name = 'Timestamp: {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     model.save('model_final.h5')
-    get_confusion_matrix('model_final.h5', test_data, test_labels)
+    get_confusion_matrix('model_final.h5', test_data, test_labels,i)
 
     #
     # scores1 = model.predict(test_data, batch_size=batch_size, verbose=2)

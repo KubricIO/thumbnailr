@@ -16,7 +16,10 @@ import cv2
 import glob
 import shutil
 from keras import backend as K
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
+
 # dimensions of our images.
 img_width, img_height = 150, 150
 start = time.clock()

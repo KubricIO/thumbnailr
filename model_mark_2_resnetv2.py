@@ -16,7 +16,9 @@ import cv2
 import glob
 import shutil
 from keras import backend as K
-
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
 # dimensions of our images.
 img_width, img_height = 150, 150
 start = time.clock()
@@ -46,6 +48,22 @@ def get_confusion_matrix(model_name,test_data,test_labels):
     print(scores)
     f.write(str(scores))
 
+    N = 2
+    class1 = (c[0][0], c[0][1])
+    class2 = (c[1][0], c[1][1])
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.35  # the width of the bars: can also be len(x) sequence
+    acc = scores[1] * 100
+    p1 = plt.bar(ind, class1, width, yerr=None)
+    p2 = plt.bar(ind, class2, width, bottom=class1, yerr=None)
+    plt.ylabel('Image count')
+    plt.title('Class wise Predicted Images | acc :' + str(acc) + '%')
+    plt.xticks(ind, ('Pred_class1', 'Pred_class2'))
+    plt.legend((p1, p2), ('Class1', 'Class2'))
+    plt.savefig(model_name + '.jpg')
+    plt.cla()
+    plt.clf()
+
 
 def get_filecount(path_to_directory):
     if os.path.exists(path_to_directory):
@@ -67,7 +85,7 @@ def get_filecount(path_to_directory):
 #     return
 
 
-epochs = 2
+epochs = 20
 batch_size = 8
 
 nb_train_1_samples = get_filecount("mark_2/train/rate1")
@@ -165,7 +183,7 @@ def train_top_model():
     # model=load_model('model_class3_resnetv2_dense1_4096_2.h5')
 
     i=1
-    kfold = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     for train, test in kfold.split(train_data, tr_labels):
         print(train)
         print(test)
@@ -211,7 +229,7 @@ def train_top_model():
         print("shape of the model output = ", model.output_shape)
         # train_labels = to_categorical(train_labels, 3)
         model.fit(train_data[train], train_labels[train],
-              epochs=2,
+              epochs=epochs,
               verbose=2,
               batch_size=batch_size,
               validation_data=(train_data[test], train_labels[test]),

@@ -64,8 +64,8 @@ def get_confusion_matrix(model_name,test_data,test_labels,i):
     plt.xticks(ind, ('Pred_class1', 'Pred_class2', 'Pred_class3'))
     plt.legend((p1, p2, p3), ('Class1', 'Class2', 'Class3'))
 
-    # plt.show()
-    plt.savefig('figure'+ str(i) +'.jpg')
+    plt.show()
+    plt.savefig(model_name+'.jpg')
 
 
 def get_filecount(path_to_directory):
